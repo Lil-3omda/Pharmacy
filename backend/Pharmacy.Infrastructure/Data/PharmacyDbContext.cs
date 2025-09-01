@@ -19,7 +19,24 @@ namespace Pharmacy.Infrastructure.Data
         {
             base.OnModelCreating(builder);
 
-            // Configure relationships
+            // Decimal precision
+            builder.Entity<Medicine>()
+                .Property(m => m.Price)
+                .HasPrecision(18, 2);
+
+            builder.Entity<Order>()
+                .Property(o => o.TotalPrice)
+                .HasPrecision(18, 2);
+
+            builder.Entity<OrderItem>()
+                .Property(oi => oi.TotalPrice)
+                .HasPrecision(18, 2);
+
+            builder.Entity<OrderItem>()
+                .Property(oi => oi.UnitPrice)
+                .HasPrecision(18, 2);
+
+            // Relationships
             builder.Entity<Medicine>()
                 .HasOne(m => m.Category)
                 .WithMany(c => c.Medicines)
@@ -44,7 +61,7 @@ namespace Pharmacy.Infrastructure.Data
                 .HasForeignKey(oi => oi.MedicineId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Configure indexes
+            // Indexes
             builder.Entity<Medicine>()
                 .HasIndex(m => m.NameAr);
 
@@ -60,5 +77,6 @@ namespace Pharmacy.Infrastructure.Data
             builder.Entity<Order>()
                 .HasIndex(o => o.OrderDate);
         }
+
     }
 }

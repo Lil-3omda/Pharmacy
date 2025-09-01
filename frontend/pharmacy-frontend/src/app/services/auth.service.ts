@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
+import { map, delay } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface User {
@@ -47,6 +47,10 @@ export class AuthService {
   }
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
+    if ((environment as any).useMockAuth) {
+      return this.mockLogin(credentials);
+    }
+
     return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, credentials)
       .pipe(
         map(response => {
@@ -120,5 +124,58 @@ export class AuthService {
   private getUserFromStorage(): User | null {
     const userStr = localStorage.getItem('user');
     return userStr ? JSON.parse(userStr) : null;
+  }
+
+  private mockLogin(credentials: LoginRequest): Observable<AuthResponse> {
+    const email = credentials.email?.toLowerCase();
+    const password = credentials.password;
+
+    const accounts = [
+      { email: 'admin@pharmacy.sa', password: 'Admin123!', role: 'Admin', fullName: 'مدير النظام' },
+      { email: 'pharmacist@pharmacy.sa', password: 'Pharma123!', role: 'Pharmacist', fullName: 'صيدلي' },
+      { email: 'customer@pharmacy.sa', password: 'Customer123!', role: 'Customer', fullName: 'عميل' }
+    ];
+
+    const found = accounts.find(a => a.email === email && a.password === password);
+    if (!found) {
+      return throwError(() => ({ status: 401, error: { message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' } }));
+    }
+
+    const user: User = {
+      id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2),
+      email: found.email,
+      fullName: found.fullName,
+      role: found.role,
+      isActive: true
+    };
+
+    const token = this.createFakeToken(user);
+
+    const response: AuthResponse = {
+      token,
+      user,
+      expiresIn: 86400
+    };
+
+    return of(response).pipe(
+      delay(500),
+      map(res => {
+        this.setToken(res.token);
+        this.setUser(res.user);
+        this.isAuthenticatedSubject.next(true);
+        return res;
+      })
+    );
+  }
+
+  private createFakeToken(user: User): string {
+    const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+    const payload = btoa(JSON.stringify({
+      exp: Math.floor(Date.now() / 1000) + 86400,
+      sub: user.id,
+      role: user.role,
+      email: user.email
+    }));
+    return `${header}.${payload}.fake-signature`;
   }
 }

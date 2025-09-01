@@ -51,11 +51,20 @@ export class LoginComponent implements OnInit {
         error: (error) => {
           this.isLoading = false;
           let errorMessage = 'حدث خطأ أثناء تسجيل الدخول';
-          
-          if (error.error && error.error.message) {
+
+          // Network/connection error (e.g., backend not running or SSL issue)
+          if (error.status === 0) {
+            errorMessage = 'تعذر الاتصال بالخادم. يرجى التأكد من تشغيل الخادم (API) والتحقق من الاتصال الآمن (SSL).';
+          } else if (error.error && error.error.message) {
+            // Backend provided a specific error message
             errorMessage = error.error.message;
+          } else if (typeof error.error === 'string' && error.error.trim().length > 0) {
+            // Some backends return a plain string
+            errorMessage = error.error;
           }
-          
+
+          console.error('Login error:', error);
+
           this.snackBar.open(errorMessage, 'إغلاق', {
             duration: 5000,
             horizontalPosition: 'center',

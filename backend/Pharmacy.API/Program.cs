@@ -60,8 +60,14 @@ builder.Services.AddCors(options =>
 });
 
 // Add DbContext
+// Add DbContext
 builder.Services.AddDbContext<PharmacyDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        b => b.MigrationsAssembly("Pharmacy.Infrastructure") // ?? tell EF to keep migrations in Infrastructure
+    )
+);
+
 
 // Add Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
