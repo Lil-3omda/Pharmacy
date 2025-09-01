@@ -1,0 +1,165 @@
+<mat-toolbar class="navbar" color="primary">
+  <div class="container-fluid d-flex align-items-center justify-content-between">
+    <!-- Logo and Title -->
+    <div class="d-flex align-items-center">
+      <button mat-icon-button [routerLink]="['/home']" class="me-2">
+        <mat-icon>local_pharmacy</mat-icon>
+      </button>
+      <h2 class="mb-0 me-3">الصيدلية الإلكترونية</h2>
+    </div>
+
+    <!-- Navigation Links -->
+    <nav class="d-none d-md-flex align-items-center">
+      <a mat-button [routerLink]="['/home']" routerLinkActive="active" class="nav-link">
+        <mat-icon>home</mat-icon>
+        الرئيسية
+      </a>
+      <a mat-button [routerLink]="['/medicines']" routerLinkActive="active" class="nav-link">
+        <mat-icon>medication</mat-icon>
+        الأدوية
+      </a>
+      
+      <!-- Authenticated User Navigation -->
+      <ng-container *ngIf="isAuthenticated$ | async">
+        <!-- Customer Links -->
+        <ng-container *ngIf="(currentUser$ | async)?.role === userRole.CUSTOMER">
+          <a mat-button [routerLink]="['/cart']" routerLinkActive="active" class="nav-link">
+            <mat-icon [matBadge]="cartItemsCount$ | async" matBadgePosition="above after" matBadgeColor="accent">
+              shopping_cart
+            </mat-icon>
+            السلة
+          </a>
+        </ng-container>
+
+        <!-- Admin/Pharmacist Links -->
+        <ng-container *ngIf="(currentUser$ | async)?.role === userRole.ADMIN || (currentUser$ | async)?.role === userRole.PHARMACIST">
+          <a mat-button [routerLink]="['/admin/medicines']" routerLinkActive="active" class="nav-link">
+            <mat-icon>inventory</mat-icon>
+            إدارة الأدوية
+          </a>
+          <a mat-button [routerLink]="['/admin/orders']" routerLinkActive="active" class="nav-link">
+            <mat-icon>assignment</mat-icon>
+            الطلبات
+          </a>
+        </ng-container>
+      </ng-container>
+    </nav>
+
+    <!-- User Menu -->
+    <div class="d-flex align-items-center">
+      <ng-container *ngIf="isAuthenticated$ | async; else guestMenu">
+        <button mat-button [matMenuTriggerFor]="userMenu" class="d-flex align-items-center">
+          <mat-icon>account_circle</mat-icon>
+          <span class="ms-1 d-none d-sm-inline">
+            {{ (currentUser$ | async)?.firstName }}
+          </span>
+          <mat-icon>arrow_drop_down</mat-icon>
+        </button>
+        
+        <mat-menu #userMenu="matMenu" xPosition="before">
+          <button mat-menu-item (click)="navigateToDashboard()">
+            <mat-icon>dashboard</mat-icon>
+            <span>لوحة التحكم</span>
+          </button>
+          <button mat-menu-item [routerLink]="['/profile']">
+            <mat-icon>person</mat-icon>
+            <span>الملف الشخصي</span>
+          </button>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="logout()" class="text-danger">
+            <mat-icon>logout</mat-icon>
+            <span>تسجيل الخروج</span>
+          </button>
+        </mat-menu>
+      </ng-container>
+
+      <ng-template #guestMenu>
+        <a mat-button [routerLink]="['/login']" class="me-2">
+          <mat-icon>login</mat-icon>
+          تسجيل الدخول
+        </a>
+        <a mat-raised-button color="accent" [routerLink]="['/register']">
+          <mat-icon>person_add</mat-icon>
+          إنشاء حساب
+        </a>
+      </ng-template>
+
+      <!-- Mobile Menu Button -->
+      <button mat-icon-button class="d-md-none ms-2" (click)="toggleMobileMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+  </div>
+</mat-toolbar>
+
+<!-- Mobile Navigation Drawer -->
+<mat-sidenav-container class="d-md-none mobile-nav" autosize>
+  <mat-sidenav #mobileDrawer mode="over" position="end" class="mobile-sidebar">
+    <mat-nav-list>
+      <a mat-list-item [routerLink]="['/home']" (click)="mobileDrawer.close()">
+        <mat-icon matListIcon>home</mat-icon>
+        <span>الرئيسية</span>
+      </a>
+      <a mat-list-item [routerLink]="['/medicines']" (click)="mobileDrawer.close()">
+        <mat-icon matListIcon>medication</mat-icon>
+        <span>الأدوية</span>
+      </a>
+
+      <ng-container *ngIf="isAuthenticated$ | async">
+        <mat-divider></mat-divider>
+        
+        <!-- Customer Mobile Links -->
+        <ng-container *ngIf="(currentUser$ | async)?.role === userRole.CUSTOMER">
+          <a mat-list-item [routerLink]="['/cart']" (click)="mobileDrawer.close()">
+            <mat-icon matListIcon [matBadge]="cartItemsCount$ | async" matBadgePosition="above after">
+              shopping_cart
+            </mat-icon>
+            <span>السلة</span>
+          </a>
+          <a mat-list-item [routerLink]="['/dashboard/customer']" (click)="mobileDrawer.close()">
+            <mat-icon matListIcon>dashboard</mat-icon>
+            <span>لوحة التحكم</span>
+          </a>
+        </ng-container>
+
+        <!-- Admin/Pharmacist Mobile Links -->
+        <ng-container *ngIf="(currentUser$ | async)?.role === userRole.ADMIN || (currentUser$ | async)?.role === userRole.PHARMACIST">
+          <a mat-list-item [routerLink]="['/admin/medicines']" (click)="mobileDrawer.close()">
+            <mat-icon matListIcon>inventory</mat-icon>
+            <span>إدارة الأدوية</span>
+          </a>
+          <a mat-list-item [routerLink]="['/admin/orders']" (click)="mobileDrawer.close()">
+            <mat-icon matListIcon>assignment</mat-icon>
+            <span>الطلبات</span>
+          </a>
+          <a mat-list-item (click)="navigateToDashboard(); mobileDrawer.close()">
+            <mat-icon matListIcon>dashboard</mat-icon>
+            <span>لوحة التحكم</span>
+          </a>
+        </ng-container>
+
+        <mat-divider></mat-divider>
+        <a mat-list-item [routerLink]="['/profile']" (click)="mobileDrawer.close()">
+          <mat-icon matListIcon>person</mat-icon>
+          <span>الملف الشخصي</span>
+        </a>
+        <a mat-list-item (click)="logout(); mobileDrawer.close()" class="text-danger">
+          <mat-icon matListIcon>logout</mat-icon>
+          <span>تسجيل الخروج</span>
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf="!(isAuthenticated$ | async)">
+        <mat-divider></mat-divider>
+        <a mat-list-item [routerLink]="['/login']" (click)="mobileDrawer.close()">
+          <mat-icon matListIcon>login</mat-icon>
+          <span>تسجيل الدخول</span>
+        </a>
+        <a mat-list-item [routerLink]="['/register']" (click)="mobileDrawer.close()">
+          <mat-icon matListIcon>person_add</mat-icon>
+          <span>إنشاء حساب</span>
+        </a>
+      </ng-container>
+    </mat-nav-list>
+  </mat-sidenav>
+</mat-sidenav-container>

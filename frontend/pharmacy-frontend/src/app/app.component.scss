@@ -1,0 +1,76 @@
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  direction: rtl;
+}
+
+.main-content {
+  flex: 1;
+  
+  &.with-header {
+    padding-top: 0;
+  }
+  
+  &.with-footer {
+    padding-bottom: 0;
+  }
+}
+
+/* Global RTL adjustments */
+[dir="rtl"] {
+  text-align: right;
+  
+  .mat-form-field {
+    text-align: right;
+  }
+  
+  .mat-input-element {
+    text-align: right;
+  }
+  
+  .mat-select-value {
+    text-align: right;
+  }
+}
+
+/* Ensure proper RTL layout for Material components */
+::ng-deep {
+  .mat-drawer-container {
+    direction: rtl;
+  }
+  
+  .mat-drawer-content {
+    direction: rtl;
+  }
+  
+  .mat-sidenav {
+    direction: rtl;
+  }
+  
+  .mat-menu-panel {
+    direction: rtl;
+  }
+  
+  .mat-snack-bar-container {
+    direction: rtl;
+  }
+}
+
+/* Custom scrollbar for RTL */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

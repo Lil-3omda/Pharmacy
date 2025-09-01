@@ -1,0 +1,39 @@
+
+**/bin/
+**/obj/
+*/.db
+*/.user
+*/.suo
+=======
+**/*.db
+**/*.user
+**/*.suo
+**/appsettings.Development.json
+**/.env
+**/.vs/
+**/CopilotIndices/
+
+.vs/
+bin/
+obj/
+
+
+
+
+# ========== Frontend: Angular ==========
+**/node_modules/
+**/dist/
+**/.angular/
+**/.env
+
+# ========== General ==========
+*.log
+.DS_Store
+Thumbs.db
+.env
+
+# ========== IDE/Editor Specific ==========
+.vscode/
+
+.idea/
+

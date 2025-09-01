@@ -1,0 +1,12 @@
+<div class="app-container" dir="rtl">
+  <!-- Header -->
+  <app-header *ngIf="showHeader"></app-header>
+
+  <!-- Main Content -->
+  <main class="main-content" [class.with-header]="showHeader" [class.with-footer]="showFooter">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Footer -->
+  <app-footer *ngIf="showFooter"></app-footer>
+</div>
