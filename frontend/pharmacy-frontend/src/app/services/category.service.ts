@@ -1,87 +1,62 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { Category, ApiResponse } from '../models';
+
+export interface Category {
+  id: number;
+  nameAr: string;
+  nameEn: string;
+  descriptionAr: string;
+  descriptionEn: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface CategoryCreateRequest {
+  nameAr: string;
+  nameEn: string;
+  descriptionAr: string;
+  descriptionEn: string;
+}
+
+export interface CategoryUpdateRequest {
+  nameAr?: string;
+  nameEn?: string;
+  descriptionAr?: string;
+  descriptionEn?: string;
+  isActive?: boolean;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
-  private readonly baseUrl = `${environment.apiUrl}/categories`;
+  private apiUrl = `${environment.apiUrl}/categories`;
 
   constructor(private http: HttpClient) {}
 
-  public getCategories(): Observable<Category[]> {
-    return this.http.get<ApiResponse<Category[]>>(this.baseUrl)
-      .pipe(
-        map(response => {
-          if (!response.success) {
-            throw new Error(response.message);
-          }
-          return response.data || [];
-        })
-      );
+  getCategories(): Observable<Category[]> {
+    return this.http.get<Category[]>(this.apiUrl);
   }
 
-  public getCategoriesWithCounts(): Observable<Category[]> {
-    return this.http.get<ApiResponse<Category[]>>(`${this.baseUrl}/with-counts`)
-      .pipe(
-        map(response => {
-          if (!response.success) {
-            throw new Error(response.message);
-          }
-          return response.data || [];
-        })
-      );
+  getCategory(id: number): Observable<Category> {
+    return this.http.get<Category>(`${this.apiUrl}/${id}`);
   }
 
-  public getCategoryById(id: string): Observable<Category> {
-    return this.http.get<ApiResponse<Category>>(`${this.baseUrl}/${id}`)
-      .pipe(
-        map(response => {
-          if (!response.success) {
-            throw new Error(response.message);
-          }
-          return response.data!;
-        })
-      );
+  createCategory(category: CategoryCreateRequest): Observable<Category> {
+    return this.http.post<Category>(this.apiUrl, category);
   }
 
-  public createCategory(categoryData: Omit<Category, 'id' | 'createdAt' | 'updatedAt'>): Observable<Category> {
-    return this.http.post<ApiResponse<Category>>(this.baseUrl, categoryData)
-      .pipe(
-        map(response => {
-          if (!response.success) {
-            throw new Error(response.message);
-          }
-          return response.data!;
-        })
-      );
+  updateCategory(id: number, category: CategoryUpdateRequest): Observable<Category> {
+    return this.http.put<Category>(`${this.apiUrl}/${id}`, category);
   }
 
-  public updateCategory(id: string, categoryData: Partial<Category>): Observable<Category> {
-    return this.http.put<ApiResponse<Category>>(`${this.baseUrl}/${id}`, categoryData)
-      .pipe(
-        map(response => {
-          if (!response.success) {
-            throw new Error(response.message);
-          }
-          return response.data!;
-        })
-      );
+  deleteCategory(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  public deleteCategory(id: string): Observable<string> {
-    return this.http.delete<ApiResponse>(`${this.baseUrl}/${id}`)
-      .pipe(
-        map(response => {
-          if (!response.success) {
-            throw new Error(response.message);
-          }
-          return response.message;
-        })
-      );
+  getActiveCategories(): Observable<Category[]> {
+    return this.http.get<Category[]>(`${this.apiUrl}/active`);
   }
 }

@@ -1,47 +1,36 @@
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { switchMap, catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Add auth token if available
-    const token = this.authService.token;
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const token = this.authService.getToken();
     
     if (token) {
-      const authReq = req.clone({
-        headers: req.headers.set('Authorization', `Bearer ${token}`)
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
       });
-      
-      return next.handle(authReq).pipe(
-        catchError(error => {
-          // If token expired, try to refresh
-          if (error.status === 401 && !req.url.includes('/auth/refresh-token')) {
-            return this.authService.refreshToken().pipe(
-              switchMap(newToken => {
-                if (newToken) {
-                  const newAuthReq = req.clone({
-                    headers: req.headers.set('Authorization', `Bearer ${newToken}`)
-                  });
-                  return next.handle(newAuthReq);
-                }
-                return throwError(error);
-              }),
-              catchError(() => {
-                this.authService.logout();
-                return throwError(error);
-              })
-            );
-          }
-          return throwError(error);
-        })
-      );
     }
 
-    return next.handle(req);
+    return next.handle(request).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          this.authService.logout();
+          this.router.navigate(['/login']);
+        }
+        return throwError(() => error);
+      })
+    );
   }
 }

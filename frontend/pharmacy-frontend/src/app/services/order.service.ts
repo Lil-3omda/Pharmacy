@@ -1,119 +1,110 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { Order, ApiResponse, CreateOrderRequest, OrderStatus } from '../models';
+
+export enum OrderStatus {
+  Pending = 'Pending',
+  Approved = 'Approved',
+  Rejected = 'Rejected',
+  Completed = 'Completed',
+  Cancelled = 'Cancelled'
+}
+
+export interface OrderItem {
+  id: number;
+  orderId: number;
+  medicineId: number;
+  medicine: {
+    id: number;
+    nameAr: string;
+    nameEn: string;
+    price: number;
+    imageUrl: string;
+  };
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+}
+
+export interface Order {
+  id: number;
+  userId: string;
+  user: {
+    id: string;
+    fullName: string;
+    email: string;
+  };
+  totalPrice: number;
+  status: OrderStatus;
+  notes?: string;
+  orderDate: string;
+  processedDate?: string;
+  orderItems: OrderItem[];
+}
+
+export interface CreateOrderRequest {
+  items: {
+    medicineId: number;
+    quantity: number;
+  }[];
+  notes?: string;
+}
+
+export interface UpdateOrderStatusRequest {
+  status: OrderStatus;
+  notes?: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
-  private readonly baseUrl = `${environment.apiUrl}/orders`;
+  private apiUrl = `${environment.apiUrl}/orders`;
 
   constructor(private http: HttpClient) {}
 
-  public createOrder(orderData: CreateOrderRequest): Observable<Order> {
-    return this.http.post<ApiResponse<Order>>(this.baseUrl, orderData)
-      .pipe(
-        map(response => {
-          if (!response.success) {
-            throw new Error(response.message);
-          }
-          return response.data!;
-        })
-      );
+  getOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(this.apiUrl);
   }
 
-  public getMyOrders(page: number = 1, limit: number = 10): Observable<ApiResponse<Order[]>> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('limit', limit.toString());
-
-    return this.http.get<ApiResponse<Order[]>>(`${this.baseUrl}/my-orders`, { params });
+  getOrder(id: number): Observable<Order> {
+    return this.http.get<Order>(`${this.apiUrl}/${id}`);
   }
 
-  public getOrderById(id: string): Observable<Order> {
-    return this.http.get<ApiResponse<Order>>(`${this.baseUrl}/${id}`)
-      .pipe(
-        map(response => {
-          if (!response.success) {
-            throw new Error(response.message);
-          }
-          return response.data!;
-        })
-      );
+  getUserOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.apiUrl}/my-orders`);
   }
 
-  public getPendingOrders(): Observable<Order[]> {
-    return this.http.get<ApiResponse<Order[]>>(`${this.baseUrl}/pending`)
-      .pipe(
-        map(response => {
-          if (!response.success) {
-            throw new Error(response.message);
-          }
-          return response.data || [];
-        })
-      );
+  getOrdersByStatus(status: OrderStatus): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.apiUrl}/by-status/${status}`);
   }
 
-  public getOrdersByStatus(status: OrderStatus): Observable<Order[]> {
-    return this.http.get<ApiResponse<Order[]>>(`${this.baseUrl}/status/${status}`)
-      .pipe(
-        map(response => {
-          if (!response.success) {
-            throw new Error(response.message);
-          }
-          return response.data || [];
-        })
-      );
+  createOrder(order: CreateOrderRequest): Observable<Order> {
+    return this.http.post<Order>(this.apiUrl, order);
   }
 
-  public approveOrder(id: string): Observable<Order> {
-    return this.http.post<ApiResponse<Order>>(`${this.baseUrl}/${id}/approve`, {})
-      .pipe(
-        map(response => {
-          if (!response.success) {
-            throw new Error(response.message);
-          }
-          return response.data!;
-        })
-      );
+  updateOrderStatus(id: number, statusUpdate: UpdateOrderStatusRequest): Observable<Order> {
+    return this.http.patch<Order>(`${this.apiUrl}/${id}/status`, statusUpdate);
   }
 
-  public rejectOrder(id: string, rejectionReason: string): Observable<Order> {
-    return this.http.post<ApiResponse<Order>>(`${this.baseUrl}/${id}/reject`, { rejectionReason })
-      .pipe(
-        map(response => {
-          if (!response.success) {
-            throw new Error(response.message);
-          }
-          return response.data!;
-        })
-      );
+  deleteOrder(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  public updateOrderStatus(id: string, status: OrderStatus): Observable<Order> {
-    return this.http.put<ApiResponse<Order>>(`${this.baseUrl}/${id}/status`, { status })
-      .pipe(
-        map(response => {
-          if (!response.success) {
-            throw new Error(response.message);
-          }
-          return response.data!;
-        })
-      );
+  approveOrder(id: number, notes?: string): Observable<Order> {
+    return this.updateOrderStatus(id, { status: OrderStatus.Approved, notes });
   }
 
-  public cancelOrder(id: string): Observable<Order> {
-    return this.http.delete<ApiResponse<Order>>(`${this.baseUrl}/${id}/cancel`)
-      .pipe(
-        map(response => {
-          if (!response.success) {
-            throw new Error(response.message);
-          }
-          return response.data!;
-        })
-      );
+  rejectOrder(id: number, notes?: string): Observable<Order> {
+    return this.updateOrderStatus(id, { status: OrderStatus.Rejected, notes });
+  }
+
+  completeOrder(id: number, notes?: string): Observable<Order> {
+    return this.updateOrderStatus(id, { status: OrderStatus.Completed, notes });
+  }
+
+  cancelOrder(id: number, notes?: string): Observable<Order> {
+    return this.updateOrderStatus(id, { status: OrderStatus.Cancelled, notes });
   }
 }
