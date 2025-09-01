@@ -1,12 +1,16 @@
-<div class="app-container" dir="rtl">
+<div class="app-container">
   <!-- Header -->
-  <app-header *ngIf="showHeader"></app-header>
+  <app-header 
+    *ngIf="isAuthenticated"
+    [currentUser]="currentUser"
+    (logout)="logout()">
+  </app-header>
 
   <!-- Main Content -->
-  <main class="main-content" [class.with-header]="showHeader" [class.with-footer]="showFooter">
+  <main class="main-content">
     <router-outlet></router-outlet>
   </main>
 
   <!-- Footer -->
-  <app-footer *ngIf="showFooter"></app-footer>
+  <app-footer *ngIf="isAuthenticated"></app-footer>
 </div>

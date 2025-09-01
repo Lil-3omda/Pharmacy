@@ -1,4 +1,196 @@
-# 🏥 نظام إدارة الصيدلية الإلكترونية
+# نظام إدارة الصيدلية - Pharmacy Management System
+
+نظام شامل لإدارة الصيدلية يتضمن واجهة خلفية (Backend) باستخدام ASP.NET Core Web API وواجهة أمامية (Frontend) باستخدام Angular 17+ مع دعم كامل للغة العربية والاتجاه من اليمين إلى اليسار (RTL).
+
+## المميزات الرئيسية
+
+### الواجهة الخلفية (Backend)
+- **ASP.NET Core Web API** مع C#
+- **Entity Framework Core** (Code First)
+- **ASP.NET Core Identity** مع JWT للمصادقة
+- **Clean Architecture** مع Repository + Unit of Work pattern
+- **SQL Server** كقاعدة بيانات
+- **Role-based Authorization** (Admin, Pharmacist, Customer)
+
+### الواجهة الأمامية (Frontend)
+- **Angular 17+** مع TypeScript
+- **Angular Material** + **Bootstrap RTL**
+- **Chart.js** + **ng2-charts** للرسوم البيانية
+- **JWT Authentication** مع Interceptors
+- **Route Guards** للحماية
+- **Responsive Design** مع دعم كامل للعربية
+
+### الوظائف الرئيسية
+- **إدارة المستخدمين**: تسجيل الدخول، التسجيل، إدارة الأدوار
+- **إدارة الأدوية**: CRUD، البحث، التصفية، إدارة المخزون
+- **إدارة الفئات**: تصنيف الأدوية
+- **إدارة الطلبات**: إنشاء، موافقة، رفض، تتبع
+- **عربة التسوق**: إضافة، تعديل، حذف المنتجات
+- **لوحات التحكم**: إحصائيات للمدير والصيدلي والعميل
+
+## متطلبات النظام
+
+### للواجهة الخلفية
+- .NET 8.0 SDK
+- SQL Server (LocalDB أو Express أو Full)
+- Visual Studio 2022 أو VS Code
+
+### للواجهة الأمامية
+- Node.js 18+ 
+- npm أو yarn
+- Angular CLI
+
+## التثبيت والتشغيل
+
+### 1. إعداد الواجهة الخلفية
+
+```bash
+# الانتقال إلى مجلد الواجهة الخلفية
+cd backend
+
+# استعادة حزم NuGet
+dotnet restore
+
+# إنشاء قاعدة البيانات وتطبيق الترحيلات
+dotnet ef database update --project Pharmacy.Infrastructure --startup-project Pharmacy.API
+
+# تشغيل الواجهة الخلفية
+dotnet run --project Pharmacy.API
+```
+
+الواجهة الخلفية ستعمل على: `https://localhost:7001`
+
+### 2. إعداد الواجهة الأمامية
+
+```bash
+# الانتقال إلى مجلد الواجهة الأمامية
+cd frontend/pharmacy-frontend
+
+# تثبيت التبعيات
+npm install
+
+# تشغيل الواجهة الأمامية
+ng serve
+```
+
+الواجهة الأمامية ستعمل على: `http://localhost:4200`
+
+## الحسابات التجريبية
+
+تم إنشاء الحسابات التالية مسبقاً:
+
+| الدور | البريد الإلكتروني | كلمة المرور |
+|-------|------------------|-------------|
+| مدير | admin@pharmacy.sa | Admin123! |
+| صيدلي | pharmacist@pharmacy.sa | Pharma123! |
+| عميل | customer@pharmacy.sa | Customer123! |
+
+## هيكل المشروع
+
+```
+pharmacy-management-system/
+├── backend/
+│   ├── Pharmacy.API/           # Web API Controllers
+│   ├── Pharmacy.Core/           # Entities & Interfaces
+│   ├── Pharmacy.Infrastructure/ # EF Core & Repositories
+│   ├── Pharmacy.Application/    # DTOs & Services
+│   └── PharmacyManagement.sln  # Solution File
+├── frontend/
+│   └── pharmacy-frontend/       # Angular Application
+│       ├── src/
+│       │   ├── app/
+│       │   │   ├── components/  # Reusable Components
+│       │   │   ├── pages/       # Page Components
+│       │   │   ├── services/    # HTTP Services
+│       │   │   ├── guards/      # Route Guards
+│       │   │   └── interceptors/# HTTP Interceptors
+│       │   └── environments/    # Environment Config
+│       └── package.json
+└── README.md
+```
+
+## API Endpoints
+
+### المصادقة (Authentication)
+- `POST /api/auth/login` - تسجيل الدخول
+- `POST /api/auth/register` - التسجيل
+- `GET /api/auth/profile` - معلومات المستخدم
+
+### الأدوية (Medicines)
+- `GET /api/medicines` - قائمة الأدوية
+- `GET /api/medicines/{id}` - تفاصيل الدواء
+- `POST /api/medicines` - إضافة دواء جديد
+- `PUT /api/medicines/{id}` - تحديث الدواء
+- `DELETE /api/medicines/{id}` - حذف الدواء
+
+### الطلبات (Orders)
+- `GET /api/orders` - قائمة الطلبات
+- `GET /api/orders/my-orders` - طلبات المستخدم
+- `POST /api/orders` - إنشاء طلب جديد
+- `PATCH /api/orders/{id}/status` - تحديث حالة الطلب
+
+### الفئات (Categories)
+- `GET /api/categories` - قائمة الفئات
+- `POST /api/categories` - إضافة فئة جديدة
+- `PUT /api/categories/{id}` - تحديث الفئة
+- `DELETE /api/categories/{id}` - حذف الفئة
+
+## المميزات التقنية
+
+### الواجهة الخلفية
+- **Clean Architecture**: فصل واضح بين الطبقات
+- **Repository Pattern**: إدارة البيانات
+- **Unit of Work**: إدارة المعاملات
+- **JWT Authentication**: مصادقة آمنة
+- **Role-based Authorization**: صلاحيات مختلفة
+- **Data Seeding**: بيانات تجريبية
+- **Input Validation**: التحقق من المدخلات
+- **Error Handling**: معالجة الأخطاء
+
+### الواجهة الأمامية
+- **Component-based Architecture**: مكونات قابلة لإعادة الاستخدام
+- **Reactive Forms**: نماذج تفاعلية
+- **HTTP Interceptors**: إدارة الطلبات
+- **Route Guards**: حماية المسارات
+- **Observables**: إدارة الحالة
+- **Responsive Design**: تصميم متجاوب
+- **RTL Support**: دعم كامل للعربية
+
+## استكشاف الأخطاء
+
+### مشاكل قاعدة البيانات
+```bash
+# إعادة إنشاء قاعدة البيانات
+dotnet ef database drop --project Pharmacy.Infrastructure --startup-project Pharmacy.API
+dotnet ef database update --project Pharmacy.Infrastructure --startup-project Pharmacy.API
+```
+
+### مشاكل الواجهة الأمامية
+```bash
+# مسح cache
+npm cache clean --force
+rm -rf node_modules
+npm install
+```
+
+### مشاكل التصريح
+تأكد من أن ملف `appsettings.json` يحتوي على إعدادات JWT صحيحة.
+
+## المساهمة
+
+1. Fork المشروع
+2. إنشاء branch جديد (`git checkout -b feature/AmazingFeature`)
+3. Commit التغييرات (`git commit -m 'Add some AmazingFeature'`)
+4. Push إلى Branch (`git push origin feature/AmazingFeature`)
+5. فتح Pull Request
+
+## الترخيص
+
+هذا المشروع مرخص تحت رخصة MIT - انظر ملف [LICENSE](LICENSE) للتفاصيل.
+
+## الدعم
+
+إذا واجهت أي مشاكل أو لديك أسئلة، يرجى فتح issue في GitHub أو التواصل مع فريق التطوير.# 🏥 نظام إدارة الصيدلية الإلكترونية
 ## Comprehensive Arabic Pharmacy Management System
 
 نظام شامل لإدارة الصيدليات باللغة العربية مع واجهة مستخدم متقدمة ونظام إدارة متكامل.

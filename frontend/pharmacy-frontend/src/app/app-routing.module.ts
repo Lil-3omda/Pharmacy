@@ -6,122 +6,57 @@ import { AuthGuard } from './guards/auth.guard';
 import { RoleGuard } from './guards/role.guard';
 
 // Components
-import { LoginComponent } from './components/auth/login/login.component';
-import { RegisterComponent } from './components/auth/register/register.component';
-import { ForgotPasswordComponent } from './components/auth/forgot-password/forgot-password.component';
-import { ResetPasswordComponent } from './components/auth/reset-password/reset-password.component';
-import { VerifyEmailComponent } from './components/auth/verify-email/verify-email.component';
-
-import { HomeComponent } from './components/pages/home/home.component';
-import { MedicinesComponent } from './components/pages/medicines/medicines.component';
-import { MedicineDetailComponent } from './components/pages/medicine-detail/medicine-detail.component';
-import { CartComponent } from './components/pages/cart/cart.component';
-import { CheckoutComponent } from './components/pages/checkout/checkout.component';
-import { ProfileComponent } from './components/pages/profile/profile.component';
-
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { AdminDashboardComponent } from './components/dashboard/admin-dashboard/admin-dashboard.component';
-import { PharmacistDashboardComponent } from './components/dashboard/pharmacist-dashboard/pharmacist-dashboard.component';
-import { CustomerDashboardComponent } from './components/dashboard/customer-dashboard/customer-dashboard.component';
-
-import { ManageMedicinesComponent } from './components/admin/manage-medicines/manage-medicines.component';
-import { ManageCategoriesComponent } from './components/admin/manage-categories/manage-categories.component';
-import { ManageOrdersComponent } from './components/admin/manage-orders/manage-orders.component';
-import { OrderDetailComponent } from './components/admin/order-detail/order-detail.component';
+import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { MedicineListComponent } from './pages/medicine-list/medicine-list.component';
+import { MedicineDetailComponent } from './pages/medicine-detail/medicine-detail.component';
+import { CartComponent } from './pages/cart/cart.component';
+import { OrderHistoryComponent } from './pages/order-history/order-history.component';
+import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard.component';
+import { PharmacistDashboardComponent } from './pages/pharmacist-dashboard/pharmacist-dashboard.component';
 
 const routes: Routes = [
-  // Public routes
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent },
-  { path: 'medicines', component: MedicinesComponent },
-  { path: 'medicine/:id', component: MedicineDetailComponent },
-  
-  // Auth routes
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'forgot-password', component: ForgotPasswordComponent },
-  { path: 'reset-password', component: ResetPasswordComponent },
-  { path: 'verify-email', component: VerifyEmailComponent },
-
+  
   // Protected routes
   {
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [AuthGuard],
     children: [
-      {
-        path: '',
-        redirectTo: 'overview',
-        pathMatch: 'full'
-      },
-      {
-        path: 'overview',
-        component: AdminDashboardComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['Admin'] }
-      },
-      {
-        path: 'pharmacist',
-        component: PharmacistDashboardComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['Admin', 'Pharmacist'] }
-      },
-      {
-        path: 'customer',
-        component: CustomerDashboardComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['Customer'] }
-      }
+      { path: '', redirectTo: 'medicines', pathMatch: 'full' },
+      { path: 'medicines', component: MedicineListComponent },
+      { path: 'medicine/:id', component: MedicineDetailComponent },
+      { path: 'cart', component: CartComponent },
+      { path: 'orders', component: OrderHistoryComponent }
     ]
   },
-
-  // Customer routes
-  {
-    path: 'cart',
-    component: CartComponent,
-    canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['Customer'] }
-  },
-  {
-    path: 'checkout',
-    component: CheckoutComponent,
-    canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['Customer'] }
-  },
-  {
-    path: 'profile',
-    component: ProfileComponent,
-    canActivate: [AuthGuard]
-  },
-
-  // Admin/Pharmacist routes
+  
+  // Admin routes
   {
     path: 'admin',
+    component: AdminDashboardComponent,
     canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['Admin', 'Pharmacist'] },
-    children: [
-      { path: '', redirectTo: 'medicines', pathMatch: 'full' },
-      { path: 'medicines', component: ManageMedicinesComponent },
-      { 
-        path: 'categories', 
-        component: ManageCategoriesComponent,
-        canActivate: [RoleGuard],
-        data: { roles: ['Admin'] }
-      },
-      { path: 'orders', component: ManageOrdersComponent },
-      { path: 'order/:id', component: OrderDetailComponent }
-    ]
+    data: { roles: ['Admin'] }
   },
-
-  // Fallback route
-  { path: '**', redirectTo: '/home' }
+  
+  // Pharmacist routes
+  {
+    path: 'pharmacist',
+    component: PharmacistDashboardComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Pharmacist', 'Admin'] }
+  },
+  
+  // Wildcard route
+  { path: '**', redirectTo: '/login' }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, {
-    enableTracing: false,
-    scrollPositionRestoration: 'top'
-  })],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
