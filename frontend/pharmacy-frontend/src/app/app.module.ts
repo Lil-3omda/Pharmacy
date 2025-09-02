@@ -34,8 +34,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 
-// Third-party
-import { ToastrModule } from 'ngx-toastr';
 
 // App Components
 import { AppComponent } from './app.component';
@@ -133,13 +131,7 @@ import { ManageCategoriesComponent } from './features/admin/manage-categories/ma
     MatDatepickerModule,
     MatNativeDateModule,
 
-    // Third-party
-    ToastrModule.forRoot({
-      positionClass: 'toast-top-right',
-      preventDuplicates: true,
-      timeOut: 3000
-    })
-  ],
+      ],
   providers: [
     AuthService,
     MedicineService,
