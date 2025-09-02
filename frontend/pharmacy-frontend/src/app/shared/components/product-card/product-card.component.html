@@ -1,0 +1,44 @@
+<mat-card class="product-card" [class.out-of-stock]="isOutOfStock()">
+  <div class="product-image-container" (click)="viewDetails()">
+    <img [src]="medicine.imageUrl" [alt]="medicine.nameAr" class="product-image">
+    <div class="stock-badge" *ngIf="isOutOfStock()" class="out-of-stock-badge">
+      نفد المخزون
+    </div>
+    <div class="stock-badge" *ngIf="isLowStock()" class="low-stock-badge">
+      مخزون قليل
+    </div>
+  </div>
+  
+  <mat-card-content class="product-content">
+    <h3 class="product-name" (click)="viewDetails()">{{medicine.nameAr}}</h3>
+    <p class="product-category">{{medicine.categoryNameAr}}</p>
+    <p class="product-description">{{medicine.descriptionAr}}</p>
+    
+    <div class="product-footer">
+      <div class="price-section">
+        <span class="price">{{medicine.price}} ر.س</span>
+        <span class="stock-info" *ngIf="!isOutOfStock()">متوفر: {{medicine.stock}}</span>
+      </div>
+      
+      <div class="actions" *ngIf="showActions">
+        <button 
+          mat-icon-button 
+          color="primary" 
+          (click)="viewDetails()"
+          matTooltip="عرض التفاصيل">
+          <mat-icon>visibility</mat-icon>
+        </button>
+        
+        <button 
+          mat-raised-button 
+          color="primary" 
+          (click)="onAddToCart()"
+          [disabled]="isOutOfStock()"
+          class="add-to-cart-btn">
+          <mat-icon>add_shopping_cart</mat-icon>
+          إضافة للسلة
+        </button>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

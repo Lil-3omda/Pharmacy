@@ -1,0 +1,149 @@
+<div class="product-list-container">
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>جميع المنتجات</h1>
+      <p>اكتشف مجموعتنا الواسعة من الأدوية والمنتجات الصحية</p>
+    </div>
+
+    <div class="content-wrapper">
+      <!-- Filters Sidebar -->
+      <aside class="filters-sidebar">
+        <mat-card class="filters-card">
+          <mat-card-header>
+            <mat-card-title>تصفية النتائج</mat-card-title>
+            <button mat-button color="warn" (click)="clearFilters()" class="clear-filters">
+              مسح الفلاتر
+            </button>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <!-- Search -->
+            <div class="filter-section">
+              <h4>البحث</h4>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>ابحث عن دواء</mat-label>
+                <input matInput [formControl]="searchControl" placeholder="اسم الدواء">
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <!-- Categories -->
+            <div class="filter-section">
+              <h4>الفئة</h4>
+              <mat-selection-list [(ngModel)]="selectedCategory" (selectionChange)="applyFilters()">
+                <mat-list-option [value]="null">جميع الفئات</mat-list-option>
+                <mat-list-option 
+                  *ngFor="let category of categories" 
+                  [value]="category.id">
+                  {{category.nameAr}}
+                </mat-list-option>
+              </mat-selection-list>
+            </div>
+
+            <!-- Price Range -->
+            <div class="filter-section">
+              <h4>نطاق السعر</h4>
+              <div class="price-inputs">
+                <mat-form-field appearance="outline">
+                  <mat-label>من</mat-label>
+                  <input matInput type="number" [(ngModel)]="priceRange.min" (change)="applyFilters()">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>إلى</mat-label>
+                  <input matInput type="number" [(ngModel)]="priceRange.max" (change)="applyFilters()">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Availability -->
+            <div class="filter-section">
+              <h4>التوفر</h4>
+              <mat-checkbox 
+                [(ngModel)]="showInStockOnly" 
+                (change)="applyFilters()"
+                class="filter-checkbox">
+                المتوفر فقط
+              </mat-checkbox>
+              <mat-checkbox 
+                [(ngModel)]="showExpiringSoon" 
+                (change)="applyFilters()"
+                class="filter-checkbox">
+                ينتهي قريباً
+              </mat-checkbox>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </aside>
+
+      <!-- Products Content -->
+      <main class="products-content">
+        <!-- Toolbar -->
+        <div class="products-toolbar">
+          <div class="results-info">
+            <span>{{medicines.length}} منتج</span>
+          </div>
+          
+          <div class="toolbar-actions">
+            <!-- View Mode -->
+            <div class="view-mode-toggle">
+              <button 
+                mat-icon-button 
+                [color]="viewMode === 'grid' ? 'primary' : ''"
+                (click)="viewMode = 'grid'"
+                matTooltip="عرض شبكي">
+                <mat-icon>grid_view</mat-icon>
+              </button>
+              <button 
+                mat-icon-button 
+                [color]="viewMode === 'list' ? 'primary' : ''"
+                (click)="viewMode = 'list'"
+                matTooltip="عرض قائمة">
+                <mat-icon>view_list</mat-icon>
+              </button>
+            </div>
+            
+            <!-- Sort -->
+            <mat-form-field appearance="outline" class="sort-field">
+              <mat-label>ترتيب حسب</mat-label>
+              <mat-select [(value)]="sortBy" (selectionChange)="onSortChange($event.value)">
+                <mat-option value="name">الاسم</mat-option>
+                <mat-option value="price">السعر</mat-option>
+                <mat-option value="stock">المخزون</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div *ngIf="isLoading" class="loading-container">
+          <app-loading-spinner message="جاري تحميل المنتجات..."></app-loading-spinner>
+        </div>
+
+        <!-- Products Grid/List -->
+        <div *ngIf="!isLoading" class="products-container">
+          <div 
+            class="products-grid" 
+            [class.grid-view]="viewMode === 'grid'"
+            [class.list-view]="viewMode === 'list'">
+            <app-product-card 
+              *ngFor="let medicine of medicines"
+              [medicine]="medicine"
+              (addToCart)="onAddToCart($event)">
+            </app-product-card>
+          </div>
+          
+          <!-- No Results -->
+          <div *ngIf="medicines.length === 0" class="no-results">
+            <mat-icon class="no-results-icon">search_off</mat-icon>
+            <h3>لم يتم العثور على منتجات</h3>
+            <p>جرب تغيير معايير البحث أو الفلاتر</p>
+            <button mat-raised-button color="primary" (click)="clearFilters()">
+              مسح الفلاتر
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>

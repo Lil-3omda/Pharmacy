@@ -1,0 +1,80 @@
+<div class="register-container">
+  <div class="register-card">
+    <div class="register-header">
+      <h1 class="register-title">إنشاء حساب جديد</h1>
+      <p class="register-subtitle">انضم إلى صيدلية الشفاء</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>الاسم الكامل</mat-label>
+          <input matInput formControlName="fullName" placeholder="أدخل اسمك الكامل">
+          <mat-error>{{getErrorMessage('fullName')}}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>البريد الإلكتروني</mat-label>
+          <input matInput formControlName="email" type="email" placeholder="أدخل بريدك الإلكتروني">
+          <mat-error>{{getErrorMessage('email')}}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>رقم الهاتف</mat-label>
+          <input matInput formControlName="phoneNumber" placeholder="أدخل رقم هاتفك">
+          <mat-error>{{getErrorMessage('phoneNumber')}}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="half-width">
+          <mat-label>كلمة المرور</mat-label>
+          <input matInput formControlName="password" [type]="hidePassword ? 'password' : 'text'" placeholder="أدخل كلمة المرور">
+          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+            <mat-icon>{{hidePassword ? 'visibility' : 'visibility_off'}}</mat-icon>
+          </button>
+          <mat-error>{{getErrorMessage('password')}}</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="half-width">
+          <mat-label>تأكيد كلمة المرور</mat-label>
+          <input matInput formControlName="confirmPassword" [type]="hideConfirmPassword ? 'password' : 'text'" placeholder="أعد إدخال كلمة المرور">
+          <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button">
+            <mat-icon>{{hideConfirmPassword ? 'visibility' : 'visibility_off'}}</mat-icon>
+          </button>
+          <mat-error>{{getErrorMessage('confirmPassword')}}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>نوع الحساب</mat-label>
+          <mat-select formControlName="role">
+            <mat-option *ngFor="let role of roles" [value]="role.value">
+              {{role.label}}
+            </mat-option>
+          </mat-select>
+          <mat-error>{{getErrorMessage('role')}}</mat-error>
+        </mat-form-field>
+      </div>
+
+      <button 
+        mat-raised-button 
+        color="primary" 
+        type="submit" 
+        class="register-button"
+        [disabled]="registerForm.invalid || isLoading">
+        <mat-spinner *ngIf="isLoading" diameter="20" class="spinner"></mat-spinner>
+        <span *ngIf="!isLoading">إنشاء الحساب</span>
+      </button>
+
+      <div class="register-footer">
+        <p>لديك حساب بالفعل؟ <a routerLink="/login" class="login-link">تسجيل الدخول</a></p>
+      </div>
+    </form>
+  </div>
+</div>

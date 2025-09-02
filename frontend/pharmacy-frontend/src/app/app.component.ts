@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from './services/auth.service';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
+import { AuthService } from './core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -9,29 +10,19 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent implements OnInit {
   title = 'نظام إدارة الصيدلية';
-  isAuthenticated = false;
-  currentUser: any = null;
+  showNavbar = true;
 
   constructor(
-    private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
-    this.authService.isAuthenticated$.subscribe(
-      isAuth => {
-        this.isAuthenticated = isAuth;
-        if (isAuth) {
-          this.currentUser = this.authService.getCurrentUser();
-        } else {
-          this.currentUser = null;
-        }
-      }
-    );
-  }
-
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+    // Hide navbar on auth pages
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.showNavbar = !['/login', '/register'].includes(event.url);
+      });
   }
 }

@@ -1,0 +1,199 @@
+<div class="checkout-container">
+  <div class="container">
+    <div class="page-header">
+      <h1>إتمام الطلب</h1>
+      <p>أكمل معلوماتك لإتمام عملية الشراء</p>
+    </div>
+
+    <div class="checkout-content">
+      <div class="checkout-form">
+        <!-- Stepper -->
+        <mat-stepper [(selectedIndex)]="currentStep" orientation="horizontal" #stepper>
+          <!-- Step 1: Shipping Information -->
+          <mat-step [stepControl]="checkoutForm" label="معلومات الشحن">
+            <form [formGroup]="checkoutForm">
+              <div class="form-section">
+                <h3>معلومات التوصيل</h3>
+                
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>الاسم الكامل</mat-label>
+                    <input matInput formControlName="fullName" placeholder="أدخل اسمك الكامل">
+                    <mat-error *ngIf="checkoutForm.get('fullName')?.hasError('required')">
+                      الاسم مطلوب
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="half-width">
+                    <mat-label>رقم الهاتف</mat-label>
+                    <input matInput formControlName="phone" placeholder="رقم الهاتف">
+                    <mat-error *ngIf="checkoutForm.get('phone')?.hasError('required')">
+                      رقم الهاتف مطلوب
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="half-width">
+                    <mat-label>البريد الإلكتروني</mat-label>
+                    <input matInput formControlName="email" type="email" placeholder="البريد الإلكتروني">
+                    <mat-error *ngIf="checkoutForm.get('email')?.hasError('required')">
+                      البريد الإلكتروني مطلوب
+                    </mat-error>
+                    <mat-error *ngIf="checkoutForm.get('email')?.hasError('email')">
+                      تنسيق البريد الإلكتروني غير صحيح
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>العنوان</mat-label>
+                    <textarea matInput formControlName="address" rows="3" placeholder="العنوان التفصيلي"></textarea>
+                    <mat-error *ngIf="checkoutForm.get('address')?.hasError('required')">
+                      العنوان مطلوب
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <div class="form-row">
+                  <mat-form-field appearance="outline" class="half-width">
+                    <mat-label>المدينة</mat-label>
+                    <input matInput formControlName="city" placeholder="المدينة">
+                    <mat-error *ngIf="checkoutForm.get('city')?.hasError('required')">
+                      المدينة مطلوبة
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="half-width">
+                    <mat-label>الرمز البريدي</mat-label>
+                    <input matInput formControlName="postalCode" placeholder="الرمز البريدي">
+                    <mat-error *ngIf="checkoutForm.get('postalCode')?.hasError('required')">
+                      الرمز البريدي مطلوب
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="step-actions">
+                <button mat-raised-button color="primary" (click)="nextStep()">
+                  التالي
+                  <mat-icon>arrow_back</mat-icon>
+                </button>
+              </div>
+            </form>
+          </mat-step>
+
+          <!-- Step 2: Payment Method -->
+          <mat-step label="طريقة الدفع">
+            <div class="form-section">
+              <h3>اختر طريقة الدفع</h3>
+              
+              <mat-radio-group formControlName="paymentMethod" class="payment-methods">
+                <mat-radio-button 
+                  *ngFor="let method of paymentMethods" 
+                  [value]="method.value"
+                  class="payment-option">
+                  <div class="payment-content">
+                    <mat-icon>{{method.icon}}</mat-icon>
+                    <span>{{method.label}}</span>
+                  </div>
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+            <div class="step-actions">
+              <button mat-button (click)="previousStep()">
+                <mat-icon>arrow_forward</mat-icon>
+                السابق
+              </button>
+              <button mat-raised-button color="primary" (click)="nextStep()">
+                التالي
+                <mat-icon>arrow_back</mat-icon>
+              </button>
+            </div>
+          </mat-step>
+
+          <!-- Step 3: Review Order -->
+          <mat-step label="مراجعة الطلب">
+            <div class="form-section">
+              <h3>مراجعة طلبك</h3>
+              
+              <!-- Order Items -->
+              <div class="order-review">
+                <div *ngFor="let item of cartItems" class="review-item">
+                  <img [src]="item.medicine.imageUrl" [alt]="item.medicine.nameAr">
+                  <div class="item-details">
+                    <h4>{{item.medicine.nameAr}}</h4>
+                    <p>الكمية: {{item.quantity}}</p>
+                  </div>
+                  <div class="item-price">
+                    {{item.totalPrice}} ر.س
+                  </div>
+                </div>
+              </div>
+
+              <!-- Notes -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>ملاحظات إضافية (اختياري)</mat-label>
+                <textarea matInput formControlName="notes" rows="3" placeholder="أي ملاحظات خاصة بالطلب"></textarea>
+              </mat-form-field>
+            </div>
+
+            <div class="step-actions">
+              <button mat-button (click)="previousStep()">
+                <mat-icon>arrow_forward</mat-icon>
+                السابق
+              </button>
+              <button 
+                mat-raised-button 
+                color="primary" 
+                (click)="onSubmit()"
+                [disabled]="isLoading">
+                <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+                <span *ngIf="!isLoading">تأكيد الطلب</span>
+              </button>
+            </div>
+          </mat-step>
+        </mat-stepper>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="order-summary">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>ملخص الطلب</mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="summary-items">
+              <div *ngFor="let item of cartItems" class="summary-item">
+                <span>{{item.medicine.nameAr}} × {{item.quantity}}</span>
+                <span>{{item.totalPrice}} ر.س</span>
+              </div>
+            </div>
+            
+            <div class="summary-totals">
+              <div class="summary-row">
+                <span>المجموع الفرعي:</span>
+                <span>{{getSubtotal()}} ر.س</span>
+              </div>
+              <div class="summary-row">
+                <span>الشحن:</span>
+                <span>{{getShipping()}} ر.س</span>
+              </div>
+              <div class="summary-row">
+                <span>ضريبة القيمة المضافة:</span>
+                <span>{{getTax()}} ر.س</span>
+              </div>
+              <div class="summary-row total-row">
+                <span>المجموع الكلي:</span>
+                <span>{{getTotal()}} ر.س</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

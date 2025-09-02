@@ -1,0 +1,102 @@
+<div class="orders-container">
+  <div class="container">
+    <div class="page-header">
+      <h1>طلباتي</h1>
+      <p>تتبع جميع طلباتك وحالتها</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="orders-filters">
+      <mat-form-field appearance="outline">
+        <mat-label>تصفية حسب الحالة</mat-label>
+        <mat-select [(value)]="selectedStatus">
+          <mat-option *ngFor="let status of statusOptions" [value]="status.value">
+            {{status.label}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="loading-container">
+      <app-loading-spinner message="جاري تحميل الطلبات..."></app-loading-spinner>
+    </div>
+
+    <!-- Orders List -->
+    <div *ngIf="!isLoading" class="orders-list">
+      <!-- No Orders -->
+      <div *ngIf="getFilteredOrders().length === 0" class="no-orders">
+        <mat-icon class="no-orders-icon">receipt_long</mat-icon>
+        <h2>لا توجد طلبات</h2>
+        <p>لم تقم بإجراء أي طلبات بعد</p>
+        <button mat-raised-button color="primary" routerLink="/products">
+          تصفح المنتجات
+        </button>
+      </div>
+
+      <!-- Order Cards -->
+      <mat-card *ngFor="let order of getFilteredOrders()" class="order-card">
+        <mat-card-header>
+          <div class="order-header">
+            <div class="order-info">
+              <h3>طلب رقم #{{order.id}}</h3>
+              <p>{{order.orderDate | date:'dd/MM/yyyy - HH:mm'}}</p>
+            </div>
+            <div class="order-status">
+              <mat-chip [class]="getStatusClass(order.status)">
+                {{getStatusLabel(order.status)}}
+              </mat-chip>
+            </div>
+          </div>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="order-items">
+            <div *ngFor="let item of order.items" class="order-item">
+              <img [src]="item.image" [alt]="item.name" class="item-image">
+              <div class="item-details">
+                <h4>{{item.name}}</h4>
+                <p>الكمية: {{item.quantity}}</p>
+              </div>
+              <div class="item-price">
+                {{item.price * item.quantity}} ر.س
+              </div>
+            </div>
+          </div>
+
+          <div class="order-summary">
+            <div class="summary-row">
+              <span>عدد المنتجات:</span>
+              <span>{{order.itemCount}}</span>
+            </div>
+            <div class="summary-row total">
+              <span>المجموع الكلي:</span>
+              <span>{{order.totalPrice}} ر.س</span>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button mat-button color="primary" (click)="reorderItems(order)">
+            <mat-icon>refresh</mat-icon>
+            إعادة الطلب
+          </button>
+          
+          <button 
+            mat-button 
+            color="warn" 
+            (click)="cancelOrder(order.id)"
+            *ngIf="canCancelOrder(order)">
+            <mat-icon>cancel</mat-icon>
+            إلغاء الطلب
+          </button>
+          
+          <button mat-button>
+            <mat-icon>visibility</mat-icon>
+            عرض التفاصيل
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

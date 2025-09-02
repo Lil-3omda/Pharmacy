@@ -1,0 +1,143 @@
+<div class="admin-dashboard-container">
+  <div class="container">
+    <div class="page-header">
+      <h1>لوحة التحكم</h1>
+      <p>مرحباً بك في لوحة تحكم إدارة الصيدلية</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      <mat-card class="stat-card primary">
+        <mat-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <h3>{{stats.totalProducts}}</h3>
+              <p>إجمالي المنتجات</p>
+            </div>
+            <mat-icon class="stat-icon">inventory</mat-icon>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card success">
+        <mat-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <h3>{{stats.totalOrders}}</h3>
+              <p>إجمالي الطلبات</p>
+            </div>
+            <mat-icon class="stat-icon">receipt_long</mat-icon>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card info">
+        <mat-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <h3>{{stats.totalUsers}}</h3>
+              <p>إجمالي المستخدمين</p>
+            </div>
+            <mat-icon class="stat-icon">people</mat-icon>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card warning">
+        <mat-card-content>
+          <div class="stat-content">
+            <div class="stat-info">
+              <h3>{{stats.totalRevenue}} ر.س</h3>
+              <p>إجمالي الإيرادات</p>
+            </div>
+            <mat-icon class="stat-icon">attach_money</mat-icon>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <h2>إجراءات سريعة</h2>
+      <div class="actions-grid">
+        <button mat-raised-button color="primary" (click)="navigateToProducts()" class="action-btn">
+          <mat-icon>add_box</mat-icon>
+          إدارة المنتجات
+        </button>
+        
+        <button mat-raised-button color="accent" (click)="navigateToOrders()" class="action-btn">
+          <mat-icon>assignment</mat-icon>
+          إدارة الطلبات
+        </button>
+        
+        <button mat-raised-button color="warn" (click)="navigateToCategories()" class="action-btn">
+          <mat-icon>category</mat-icon>
+          إدارة الفئات
+        </button>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+      <!-- Recent Orders -->
+      <mat-card class="recent-orders">
+        <mat-card-header>
+          <mat-card-title>الطلبات الأخيرة</mat-card-title>
+          <button mat-button color="primary" (click)="navigateToOrders()">
+            عرض الكل
+          </button>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="orders-table">
+            <div class="table-header">
+              <span>رقم الطلب</span>
+              <span>العميل</span>
+              <span>المبلغ</span>
+              <span>الحالة</span>
+              <span>التاريخ</span>
+            </div>
+            
+            <div *ngFor="let order of recentOrders" class="table-row">
+              <span>#{{order.id}}</span>
+              <span>{{order.customer}}</span>
+              <span>{{order.total}} ر.س</span>
+              <span>
+                <mat-chip [class]="getStatusClass(order.status)">
+                  {{order.status === 'Pending' ? 'قيد الانتظار' : 
+                    order.status === 'Approved' ? 'مؤكد' : 'مكتمل'}}
+                </mat-chip>
+              </span>
+              <span>{{order.date | date:'dd/MM/yyyy'}}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Low Stock Alert -->
+      <mat-card class="low-stock-alert">
+        <mat-card-header>
+          <mat-card-title>تنبيه نقص المخزون</mat-card-title>
+          <mat-icon class="alert-icon">warning</mat-icon>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div *ngFor="let product of lowStockProducts" class="stock-item">
+            <div class="product-info">
+              <h4>{{product.name}}</h4>
+              <p>{{product.category}}</p>
+            </div>
+            <div class="stock-info">
+              <span class="stock-count">{{product.stock}} متبقي</span>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button mat-button color="primary" (click)="navigateToProducts()">
+            إدارة المخزون
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

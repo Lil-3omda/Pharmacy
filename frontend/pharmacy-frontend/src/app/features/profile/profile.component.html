@@ -1,0 +1,171 @@
+<div class="profile-container">
+  <div class="container">
+    <div class="page-header">
+      <h1>الملف الشخصي</h1>
+      <p>إدارة معلوماتك الشخصية وإعدادات الحساب</p>
+    </div>
+
+    <div class="profile-content">
+      <!-- Profile Information -->
+      <mat-card class="profile-card">
+        <mat-card-header>
+          <div class="profile-header">
+            <mat-card-title>المعلومات الشخصية</mat-card-title>
+            <button 
+              mat-button 
+              color="primary" 
+              (click)="toggleEditMode()"
+              *ngIf="!isEditMode">
+              <mat-icon>edit</mat-icon>
+              تعديل
+            </button>
+          </div>
+        </mat-card-header>
+
+        <mat-card-content>
+          <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>الاسم الكامل</mat-label>
+                <input matInput formControlName="fullName" [readonly]="!isEditMode">
+                <mat-error>{{getErrorMessage('profile', 'fullName')}}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>البريد الإلكتروني</mat-label>
+                <input matInput formControlName="email" type="email" [readonly]="!isEditMode">
+                <mat-error>{{getErrorMessage('profile', 'email')}}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>رقم الهاتف</mat-label>
+                <input matInput formControlName="phoneNumber" [readonly]="!isEditMode">
+              </mat-form-field>
+            </div>
+
+            <div class="form-row" *ngIf="currentUser">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>نوع الحساب</mat-label>
+                <input matInput [value]="currentUser.role" readonly>
+              </mat-form-field>
+            </div>
+
+            <div class="form-actions" *ngIf="isEditMode">
+              <button mat-button type="button" (click)="toggleEditMode()">إلغاء</button>
+              <button 
+                mat-raised-button 
+                color="primary" 
+                type="submit"
+                [disabled]="profileForm.invalid || isLoading">
+                <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+                <span *ngIf="!isLoading">حفظ التغييرات</span>
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Change Password -->
+      <mat-card class="password-card">
+        <mat-card-header>
+          <mat-card-title>تغيير كلمة المرور</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>كلمة المرور الحالية</mat-label>
+                <input matInput formControlName="currentPassword" [type]="hideCurrentPassword ? 'password' : 'text'">
+                <button mat-icon-button matSuffix (click)="hideCurrentPassword = !hideCurrentPassword" type="button">
+                  <mat-icon>{{hideCurrentPassword ? 'visibility' : 'visibility_off'}}</mat-icon>
+                </button>
+                <mat-error>{{getErrorMessage('password', 'currentPassword')}}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>كلمة المرور الجديدة</mat-label>
+                <input matInput formControlName="newPassword" [type]="hideNewPassword ? 'password' : 'text'">
+                <button mat-icon-button matSuffix (click)="hideNewPassword = !hideNewPassword" type="button">
+                  <mat-icon>{{hideNewPassword ? 'visibility' : 'visibility_off'}}</mat-icon>
+                </button>
+                <mat-error>{{getErrorMessage('password', 'newPassword')}}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>تأكيد كلمة المرور الجديدة</mat-label>
+                <input matInput formControlName="confirmPassword" [type]="hideConfirmPassword ? 'password' : 'text'">
+                <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button">
+                  <mat-icon>{{hideConfirmPassword ? 'visibility' : 'visibility_off'}}</mat-icon>
+                </button>
+                <mat-error>{{getErrorMessage('password', 'confirmPassword')}}</mat-error>
+              </mat-form-field>
+            </div>
+
+            <div class="form-actions">
+              <button 
+                mat-raised-button 
+                color="primary" 
+                type="submit"
+                [disabled]="passwordForm.invalid || isLoading">
+                <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+                <span *ngIf="!isLoading">تغيير كلمة المرور</span>
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Account Statistics -->
+      <mat-card class="stats-card">
+        <mat-card-header>
+          <mat-card-title>إحصائيات الحساب</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <mat-icon class="stat-icon">shopping_bag</mat-icon>
+              <div class="stat-info">
+                <span class="stat-number">12</span>
+                <span class="stat-label">إجمالي الطلبات</span>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <mat-icon class="stat-icon">payments</mat-icon>
+              <div class="stat-info">
+                <span class="stat-number">1,250 ر.س</span>
+                <span class="stat-label">إجمالي المشتريات</span>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <mat-icon class="stat-icon">favorite</mat-icon>
+              <div class="stat-info">
+                <span class="stat-number">8</span>
+                <span class="stat-label">المنتجات المفضلة</span>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <mat-icon class="stat-icon">calendar_today</mat-icon>
+              <div class="stat-info">
+                <span class="stat-number">عضو منذ</span>
+                <span class="stat-label">يناير 2025</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

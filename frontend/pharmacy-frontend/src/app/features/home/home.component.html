@@ -1,0 +1,103 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">مرحباً بك في صيدلية الشفاء</h1>
+      <p class="hero-subtitle">نقدم لك أفضل الأدوية والمنتجات الصحية بأسعار مناسبة</p>
+      
+      <!-- Search Bar -->
+      <div class="search-container">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>ابحث عن الأدوية...</mat-label>
+          <input matInput [(ngModel)]="searchTerm" (keyup.enter)="onSearch()" placeholder="اكتب اسم الدواء">
+          <button mat-icon-button matSuffix (click)="onSearch()">
+            <mat-icon>search</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="categories-section">
+    <div class="container">
+      <h2 class="section-title">تصفح حسب الفئة</h2>
+      
+      <div class="categories-grid">
+        <div 
+          *ngFor="let category of categories" 
+          class="category-card"
+          (click)="onCategoryClick(category.id)">
+          <mat-card>
+            <mat-card-content>
+              <mat-icon class="category-icon">category</mat-icon>
+              <h3>{{category.nameAr}}</h3>
+              <p>{{category.descriptionAr}}</p>
+              <span class="medicine-count" *ngIf="category.medicineCount">
+                {{category.medicineCount}} منتج
+              </span>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products Section -->
+  <section class="featured-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">المنتجات المميزة</h2>
+        <button mat-button color="primary" routerLink="/products">
+          عرض الكل
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+      </div>
+
+      <div *ngIf="isLoading" class="loading-container">
+        <app-loading-spinner message="جاري تحميل المنتجات..."></app-loading-spinner>
+      </div>
+
+      <div *ngIf="!isLoading" class="products-grid">
+        <app-product-card 
+          *ngFor="let medicine of featuredMedicines"
+          [medicine]="medicine"
+          (addToCart)="onAddToCart($event)">
+        </app-product-card>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="container">
+      <h2 class="section-title">لماذا تختار صيدلية الشفاء؟</h2>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <mat-icon class="feature-icon">verified</mat-icon>
+          <h3>منتجات أصلية</h3>
+          <p>جميع منتجاتنا أصلية ومعتمدة من وزارة الصحة</p>
+        </div>
+        
+        <div class="feature-card">
+          <mat-icon class="feature-icon">local_shipping</mat-icon>
+          <h3>توصيل سريع</h3>
+          <p>نوصل طلبك في نفس اليوم داخل المدينة</p>
+        </div>
+        
+        <div class="feature-card">
+          <mat-icon class="feature-icon">support_agent</mat-icon>
+          <h3>دعم 24/7</h3>
+          <p>فريق الدعم متاح على مدار الساعة لمساعدتك</p>
+        </div>
+        
+        <div class="feature-card">
+          <mat-icon class="feature-icon">security</mat-icon>
+          <h3>دفع آمن</h3>
+          <p>نضمن أمان معلوماتك وطرق الدفع المتعددة</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

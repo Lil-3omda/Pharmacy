@@ -1,0 +1,116 @@
+<div class="cart-container">
+  <div class="container">
+    <div class="page-header">
+      <h1>سلة التسوق</h1>
+      <p *ngIf="cartItems.length > 0">لديك {{cartItems.length}} منتج في السلة</p>
+    </div>
+
+    <!-- Empty Cart -->
+    <div *ngIf="cartItems.length === 0" class="empty-cart">
+      <mat-icon class="empty-cart-icon">shopping_cart</mat-icon>
+      <h2>سلة التسوق فارغة</h2>
+      <p>لم تقم بإضافة أي منتجات بعد</p>
+      <button mat-raised-button color="primary" (click)="continueShopping()">
+        تصفح المنتجات
+      </button>
+    </div>
+
+    <!-- Cart Items -->
+    <div *ngIf="cartItems.length > 0" class="cart-content">
+      <div class="cart-items">
+        <mat-card class="cart-header">
+          <div class="header-row">
+            <span class="product-col">المنتج</span>
+            <span class="price-col">السعر</span>
+            <span class="quantity-col">الكمية</span>
+            <span class="total-col">المجموع</span>
+            <span class="actions-col">إجراءات</span>
+          </div>
+        </mat-card>
+
+        <mat-card *ngFor="let item of cartItems" class="cart-item">
+          <div class="item-row">
+            <div class="product-info">
+              <img [src]="item.medicine.imageUrl" [alt]="item.medicine.nameAr" class="product-image">
+              <div class="product-details">
+                <h3>{{item.medicine.nameAr}}</h3>
+                <p>{{item.medicine.categoryNameAr}}</p>
+                <span class="stock-info">متوفر: {{item.medicine.stock}}</span>
+              </div>
+            </div>
+
+            <div class="price-info">
+              <span class="price">{{item.medicine.price}} ر.س</span>
+            </div>
+
+            <div class="quantity-controls">
+              <button mat-icon-button (click)="decreaseQuantity(item)" [disabled]="item.quantity <= 1">
+                <mat-icon>remove</mat-icon>
+              </button>
+              <span class="quantity">{{item.quantity}}</span>
+              <button mat-icon-button (click)="increaseQuantity(item)" [disabled]="item.quantity >= item.medicine.stock">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+
+            <div class="total-price">
+              <span class="total">{{item.totalPrice}} ر.س</span>
+            </div>
+
+            <div class="item-actions">
+              <button mat-icon-button color="warn" (click)="removeItem(item.medicine.id)" matTooltip="حذف">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card>
+
+        <div class="cart-actions">
+          <button mat-button color="warn" (click)="clearCart()">
+            <mat-icon>clear_all</mat-icon>
+            مسح السلة
+          </button>
+          <button mat-button (click)="continueShopping()">
+            <mat-icon>arrow_forward</mat-icon>
+            متابعة التسوق
+          </button>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="order-summary">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>ملخص الطلب</mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content>
+            <div class="summary-row">
+              <span>المجموع الفرعي:</span>
+              <span>{{getSubtotal()}} ر.س</span>
+            </div>
+            <div class="summary-row">
+              <span>ضريبة القيمة المضافة (15%):</span>
+              <span>{{getTax()}} ر.س</span>
+            </div>
+            <div class="summary-row total-row">
+              <span>المجموع الكلي:</span>
+              <span>{{getTotal()}} ر.س</span>
+            </div>
+          </mat-card-content>
+          
+          <mat-card-actions>
+            <button 
+              mat-raised-button 
+              color="primary" 
+              (click)="proceedToCheckout()"
+              class="checkout-btn">
+              <mat-icon>payment</mat-icon>
+              إتمام الطلب
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,212 @@
+<div class="manage-products-container">
+  <div class="container">
+    <div class="page-header">
+      <h1>إدارة المنتجات</h1>
+      <button mat-raised-button color="primary" (click)="openAddDialog()">
+        <mat-icon>add</mat-icon>
+        إضافة منتج جديد
+      </button>
+    </div>
+
+    <!-- Products Table -->
+    <mat-card class="products-table-card">
+      <mat-card-content>
+        <div *ngIf="isLoading" class="loading-container">
+          <app-loading-spinner message="جاري تحميل المنتجات..."></app-loading-spinner>
+        </div>
+
+        <table mat-table [dataSource]="medicines" *ngIf="!isLoading" class="products-table">
+          <!-- Image Column -->
+          <ng-container matColumnDef="image">
+            <th mat-header-cell *matHeaderCellDef>الصورة</th>
+            <td mat-cell *matCellDef="let medicine">
+              <img [src]="medicine.imageUrl" [alt]="medicine.nameAr" class="product-image">
+            </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="nameAr">
+            <th mat-header-cell *matHeaderCellDef>اسم المنتج</th>
+            <td mat-cell *matCellDef="let medicine">
+              <div class="product-name-cell">
+                <h4>{{medicine.nameAr}}</h4>
+                <p>{{medicine.nameEn}}</p>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Category Column -->
+          <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef>الفئة</th>
+            <td mat-cell *matCellDef="let medicine">
+              {{getCategoryName(medicine.categoryId)}}
+            </td>
+          </ng-container>
+
+          <!-- Price Column -->
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef>السعر</th>
+            <td mat-cell *matCellDef="let medicine">
+              <span class="price">{{medicine.price}} ر.س</span>
+            </td>
+          </ng-container>
+
+          <!-- Stock Column -->
+          <ng-container matColumnDef="stock">
+            <th mat-header-cell *matHeaderCellDef>المخزون</th>
+            <td mat-cell *matCellDef="let medicine">
+              <mat-chip [class]="getStockClass(medicine.stock)">
+                {{getStockStatus(medicine.stock)}} ({{medicine.stock}})
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>الحالة</th>
+            <td mat-cell *matCellDef="let medicine">
+              <mat-chip [color]="medicine.isActive ? 'primary' : 'warn'">
+                {{medicine.isActive ? 'نشط' : 'غير نشط'}}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>الإجراءات</th>
+            <td mat-cell *matCellDef="let medicine">
+              <button mat-icon-button color="primary" (click)="openEditDialog(medicine)" matTooltip="تعديل">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteProduct(medicine)" matTooltip="حذف">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Add/Edit Product Form -->
+    <mat-card *ngIf="isEditMode || selectedMedicine !== null" class="product-form-card">
+      <mat-card-header>
+        <mat-card-title>{{isEditMode ? 'تعديل المنتج' : 'إضافة منتج جديد'}}</mat-card-title>
+        <button mat-icon-button (click)="closeDialog()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="productForm" (ngSubmit)="saveProduct()">
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>الاسم بالعربية</mat-label>
+              <input matInput formControlName="nameAr">
+              <mat-error *ngIf="productForm.get('nameAr')?.hasError('required')">
+                الاسم بالعربية مطلوب
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>الاسم بالإنجليزية</mat-label>
+              <input matInput formControlName="nameEn">
+              <mat-error *ngIf="productForm.get('nameEn')?.hasError('required')">
+                الاسم بالإنجليزية مطلوب
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>الوصف بالعربية</mat-label>
+              <textarea matInput formControlName="descriptionAr" rows="3"></textarea>
+              <mat-error *ngIf="productForm.get('descriptionAr')?.hasError('required')">
+                الوصف بالعربية مطلوب
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>الوصف بالإنجليزية</mat-label>
+              <textarea matInput formControlName="descriptionEn" rows="3"></textarea>
+              <mat-error *ngIf="productForm.get('descriptionEn')?.hasError('required')">
+                الوصف بالإنجليزية مطلوب
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>الفئة</mat-label>
+              <mat-select formControlName="categoryId">
+                <mat-option *ngFor="let category of categories" [value]="category.id">
+                  {{category.nameAr}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="productForm.get('categoryId')?.hasError('required')">
+                الفئة مطلوبة
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>السعر (ر.س)</mat-label>
+              <input matInput formControlName="price" type="number" step="0.01">
+              <mat-error *ngIf="productForm.get('price')?.hasError('required')">
+                السعر مطلوب
+              </mat-error>
+              <mat-error *ngIf="productForm.get('price')?.hasError('min')">
+                السعر يجب أن يكون أكبر من صفر
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>المخزون</mat-label>
+              <input matInput formControlName="stock" type="number">
+              <mat-error *ngIf="productForm.get('stock')?.hasError('required')">
+                المخزون مطلوب
+              </mat-error>
+              <mat-error *ngIf="productForm.get('stock')?.hasError('min')">
+                المخزون لا يمكن أن يكون سالباً
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+              <mat-label>تاريخ الانتهاء</mat-label>
+              <input matInput formControlName="expiryDate" type="date">
+              <mat-error *ngIf="productForm.get('expiryDate')?.hasError('required')">
+                تاريخ الانتهاء مطلوب
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>رابط الصورة</mat-label>
+              <input matInput formControlName="imageUrl" placeholder="https://example.com/image.jpg">
+              <mat-error *ngIf="productForm.get('imageUrl')?.hasError('required')">
+                رابط الصورة مطلوب
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-actions">
+            <button mat-button type="button" (click)="closeDialog()">إلغاء</button>
+            <button 
+              mat-raised-button 
+              color="primary" 
+              type="submit"
+              [disabled]="productForm.invalid || isLoading">
+              {{isEditMode ? 'تحديث' : 'إضافة'}}
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

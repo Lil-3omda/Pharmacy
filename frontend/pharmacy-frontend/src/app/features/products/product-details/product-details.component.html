@@ -1,0 +1,109 @@
+<div class="product-details-container" *ngIf="!isLoading && medicine">
+  <div class="container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+      <a routerLink="/home">الرئيسية</a>
+      <mat-icon>chevron_left</mat-icon>
+      <a routerLink="/products">المنتجات</a>
+      <mat-icon>chevron_left</mat-icon>
+      <span>{{medicine.nameAr}}</span>
+    </nav>
+
+    <!-- Product Details -->
+    <div class="product-details">
+      <div class="product-images">
+        <div class="main-image">
+          <img [src]="medicine.imageUrl" [alt]="medicine.nameAr">
+          <div class="stock-badge" *ngIf="isOutOfStock()">نفد المخزون</div>
+          <div class="stock-badge low-stock" *ngIf="isLowStock()">مخزون قليل</div>
+        </div>
+      </div>
+
+      <div class="product-info">
+        <div class="product-header">
+          <h1 class="product-title">{{medicine.nameAr}}</h1>
+          <p class="product-subtitle">{{medicine.nameEn}}</p>
+          <div class="product-category">
+            <mat-chip>{{medicine.categoryNameAr}}</mat-chip>
+          </div>
+        </div>
+
+        <div class="product-description">
+          <h3>الوصف</h3>
+          <p>{{medicine.descriptionAr}}</p>
+        </div>
+
+        <div class="product-details-info">
+          <div class="info-item">
+            <span class="label">تاريخ الانتهاء:</span>
+            <span class="value">{{medicine.expiryDate | date:'dd/MM/yyyy'}}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">المخزون المتاح:</span>
+            <span class="value" [class.low-stock]="isLowStock()" [class.out-of-stock]="isOutOfStock()">
+              {{medicine.stock}} قطعة
+            </span>
+          </div>
+        </div>
+
+        <div class="purchase-section">
+          <div class="price-section">
+            <span class="price">{{medicine.price}} ر.س</span>
+            <span class="price-label">للقطعة الواحدة</span>
+          </div>
+
+          <div class="quantity-section" *ngIf="!isOutOfStock()">
+            <label>الكمية:</label>
+            <div class="quantity-controls">
+              <button mat-icon-button (click)="decreaseQuantity()" [disabled]="quantity <= 1">
+                <mat-icon>remove</mat-icon>
+              </button>
+              <span class="quantity-display">{{quantity}}</span>
+              <button mat-icon-button (click)="increaseQuantity()" [disabled]="quantity >= medicine.stock">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button 
+              mat-raised-button 
+              color="primary" 
+              (click)="addToCart()"
+              [disabled]="isOutOfStock()"
+              class="add-to-cart-btn">
+              <mat-icon>add_shopping_cart</mat-icon>
+              إضافة للسلة
+            </button>
+            
+            <button 
+              mat-raised-button 
+              color="accent" 
+              (click)="buyNow()"
+              [disabled]="isOutOfStock()"
+              class="buy-now-btn">
+              <mat-icon>flash_on</mat-icon>
+              اشتري الآن
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Products -->
+    <section class="related-products" *ngIf="relatedMedicines.length > 0">
+      <h2>منتجات ذات صلة</h2>
+      <div class="related-grid">
+        <app-product-card 
+          *ngFor="let relatedMedicine of relatedMedicines"
+          [medicine]="relatedMedicine"
+          (addToCart)="onRelatedProductClick($event)">
+        </app-product-card>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div *ngIf="isLoading" class="loading-container">
+  <app-loading-spinner message="جاري تحميل تفاصيل المنتج..."></app-loading-spinner>
+</div>

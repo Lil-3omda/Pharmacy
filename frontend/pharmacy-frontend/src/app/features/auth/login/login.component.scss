@@ -1,0 +1,161 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  direction: rtl;
+}
+
+.login-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  padding: 40px;
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+}
+
+.login-header {
+  margin-bottom: 30px;
+  
+  .brand-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    
+    .brand-icon {
+      font-size: 36px;
+      color: #3498db;
+    }
+  }
+}
+
+.login-title {
+  color: #2c3e50;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.login-subtitle {
+  color: #7f8c8d;
+  font-size: 16px;
+  margin: 0;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-button {
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+.spinner {
+  margin-left: 8px;
+}
+
+.login-footer {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #ecf0f1;
+  
+  p {
+    margin: 0 0 12px 0;
+    color: #7f8c8d;
+  }
+  
+  .register-link,
+  .forgot-password {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  
+  .forgot-password {
+    font-size: 14px;
+  }
+}
+
+.demo-accounts {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #ecf0f1;
+  text-align: right;
+  
+  h3 {
+    color: #2c3e50;
+    font-size: 16px;
+    margin: 0 0 15px 0;
+    text-align: center;
+  }
+  
+  .demo-account {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f8f9fa;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-right: 3px solid #3498db;
+    
+    &:hover {
+      background: #e3f2fd;
+      transform: translateX(-4px);
+    }
+    
+    mat-icon {
+      color: #3498db;
+      font-size: 20px;
+    }
+    
+    div {
+      flex: 1;
+      text-align: right;
+      
+      strong {
+        color: #2c3e50;
+        display: block;
+        margin-bottom: 2px;
+      }
+      
+      small {
+        color: #7f8c8d;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 30px 20px;
+  }
+  
+  .login-title {
+    font-size: 24px;
+  }
+  
+  .brand-section {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
