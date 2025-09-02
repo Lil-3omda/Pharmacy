@@ -1,0 +1,42 @@
+<div class="favorites-container">
+  <div class="container">
+    <div class="page-header">
+      <h1>المنتجات المفضلة</h1>
+      <p>جميع المنتجات التي أضفتها إلى قائمة المفضلة</p>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-container">
+      <app-loading-spinner message="جاري تحميل المفضلة..."></app-loading-spinner>
+    </div>
+
+    <!-- Empty Favorites -->
+    <div *ngIf="!isLoading && favorites.length === 0" class="empty-favorites">
+      <mat-icon class="empty-icon">favorite_border</mat-icon>
+      <h2>لا توجد منتجات مفضلة</h2>
+      <p>لم تقم بإضافة أي منتجات إلى المفضلة بعد</p>
+      <button mat-raised-button color="primary" routerLink="/products">
+        تصفح المنتجات
+      </button>
+    </div>
+
+    <!-- Favorites Grid -->
+    <div *ngIf="!isLoading && favorites.length > 0" class="favorites-content">
+      <div class="favorites-header">
+        <h2>لديك {{favorites.length}} منتج في المفضلة</h2>
+        <button mat-button color="warn" (click)="clearAllFavorites()">
+          <mat-icon>clear_all</mat-icon>
+          مسح الكل
+        </button>
+      </div>
+
+      <div class="favorites-grid">
+        <app-medicine-card 
+          *ngFor="let medicine of favorites"
+          [medicine]="medicine"
+          (addToCart)="onAddToCart($event)"
+          (favoriteToggled)="onFavoriteToggled($event)">
+        </app-medicine-card>
+      </div>
+    </div>
+  </div>
+</div>

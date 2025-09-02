@@ -113,6 +113,39 @@
         </mat-card-content>
       </mat-card>
 
+      <!-- Prescription Requests -->
+      <mat-card class="prescription-requests">
+        <mat-card-header>
+          <mat-card-title>طلبات الوصفات الطبية</mat-card-title>
+          <mat-chip color="warn" *ngIf="pendingPrescriptions > 0">
+            {{pendingPrescriptions}} قيد المراجعة
+          </mat-chip>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="prescription-list">
+            <div *ngFor="let prescription of recentPrescriptions" class="prescription-item">
+              <div class="prescription-info">
+                <h4>وصفة #{{prescription.id}}</h4>
+                <p>د. {{prescription.doctorName}}</p>
+                <small>{{prescription.date | date:'dd/MM/yyyy'}}</small>
+              </div>
+              <div class="prescription-actions">
+                <button mat-icon-button color="primary" matTooltip="عرض">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button mat-icon-button color="accent" matTooltip="قبول">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" matTooltip="رفض">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
       <!-- Low Stock Alert -->
       <mat-card class="low-stock-alert">
         <mat-card-header>

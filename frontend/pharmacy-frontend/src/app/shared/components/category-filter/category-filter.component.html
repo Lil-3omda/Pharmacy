@@ -1,0 +1,26 @@
+<div class="category-filter">
+  <h3>تصفية حسب الفئة</h3>
+  
+  <div class="categories-list">
+    <button 
+      mat-button 
+      [class.active]="selectedCategoryId === null"
+      (click)="selectCategory(null)"
+      class="category-button">
+      <mat-icon>all_inclusive</mat-icon>
+      <span>جميع الفئات</span>
+      <span class="count" *ngIf="totalCount">({{totalCount}})</span>
+    </button>
+    
+    <button 
+      *ngFor="let category of categories"
+      mat-button 
+      [class.active]="selectedCategoryId === category.id"
+      (click)="selectCategory(category.id)"
+      class="category-button">
+      <mat-icon>{{getCategoryIcon(category.nameEn)}}</mat-icon>
+      <span>{{category.nameAr}}</span>
+      <span class="count" *ngIf="category.medicineCount">({{category.medicineCount}})</span>
+    </button>
+  </div>
+</div>

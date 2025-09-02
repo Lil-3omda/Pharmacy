@@ -111,7 +111,7 @@
 
 .dashboard-content {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 24px;
 }
 
@@ -168,6 +168,53 @@
   }
 }
 
+.prescription-requests {
+  mat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .prescription-list {
+    .prescription-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f1f1f1;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      .prescription-info {
+        h4 {
+          font-size: 14px;
+          font-weight: 600;
+          color: #2c3e50;
+          margin: 0 0 4px 0;
+        }
+        
+        p {
+          font-size: 12px;
+          color: #7f8c8d;
+          margin: 0 0 2px 0;
+        }
+        
+        small {
+          font-size: 11px;
+          color: #95a5a6;
+        }
+      }
+      
+      .prescription-actions {
+        display: flex;
+        gap: 4px;
+      }
+    }
+  }
+}
+
 .low-stock-alert {
   mat-card-header {
     .alert-icon {
@@ -217,12 +264,16 @@
 
 @media (max-width: 1024px) {
   .dashboard-content {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 20px;
   }
 }
 
 @media (max-width: 768px) {
+  .dashboard-content {
+    grid-template-columns: 1fr;
+  }
+  
   .stats-grid {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }

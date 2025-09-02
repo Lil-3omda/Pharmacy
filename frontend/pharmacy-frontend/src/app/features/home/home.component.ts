@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MedicineService, Medicine } from '../../core/services/medicine.service';
 import { CategoryService, Category } from '../../core/services/category.service';
+import { OfferService } from '../../core/services/offer.service';
 import { CartService } from '../../core/services/cart.service';
+import { Offer } from '../../core/models';
 
 @Component({
   selector: 'app-home',
@@ -12,12 +14,13 @@ import { CartService } from '../../core/services/cart.service';
 export class HomeComponent implements OnInit {
   featuredMedicines: Medicine[] = [];
   categories: Category[] = [];
+  currentOffer: Offer | null = null;
   isLoading = true;
-  searchTerm = '';
 
   constructor(
     private medicineService: MedicineService,
     private categoryService: CategoryService,
+    private offerService: OfferService,
     private cartService: CartService,
     private router: Router
   ) {}
@@ -46,14 +49,23 @@ export class HomeComponent implements OnInit {
         this.categories = categories;
       }
     });
+
+    // Load current offer
+    this.offerService.getActiveOffers().subscribe({
+      next: (offers) => {
+        this.currentOffer = offers.length > 0 ? offers[0] : null;
+      }
+    });
   }
 
-  onSearch() {
-    if (this.searchTerm.trim()) {
-      this.router.navigate(['/products'], { 
-        queryParams: { search: this.searchTerm.trim() } 
-      });
-    }
+  onSearch(searchTerm: string) {
+    this.router.navigate(['/products'], { 
+      queryParams: { search: searchTerm } 
+    });
+  }
+
+  onSuggestionSelected(medicine: Medicine) {
+    this.router.navigate(['/products', medicine.id]);
   }
 
   onCategoryClick(categoryId: number) {
@@ -62,6 +74,9 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  viewOffer(offer: Offer) {
+    this.router.navigate(['/offers']);
+  }
   onAddToCart(medicine: Medicine) {
     this.cartService.addToCart(medicine, 1);
   }

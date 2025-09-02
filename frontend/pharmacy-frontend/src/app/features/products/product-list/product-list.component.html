@@ -18,28 +18,13 @@
           </mat-card-header>
           
           <mat-card-content>
-            <!-- Search -->
-            <div class="filter-section">
-              <h4>البحث</h4>
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>ابحث عن دواء</mat-label>
-                <input matInput [formControl]="searchControl" placeholder="اسم الدواء">
-                <mat-icon matSuffix>search</mat-icon>
-              </mat-form-field>
-            </div>
-
-            <!-- Categories -->
-            <div class="filter-section">
-              <h4>الفئة</h4>
-              <mat-selection-list [(ngModel)]="selectedCategory" (selectionChange)="applyFilters()">
-                <mat-list-option [value]="null">جميع الفئات</mat-list-option>
-                <mat-list-option 
-                  *ngFor="let category of categories" 
-                  [value]="category.id">
-                  {{category.nameAr}}
-                </mat-list-option>
-              </mat-selection-list>
-            </div>
+            <!-- Categories Filter -->
+            <app-category-filter
+              [categories]="categories"
+              [selectedCategoryId]="selectedCategory"
+              [totalCount]="medicines.length"
+              (categorySelected)="onCategoryChange($event)">
+            </app-category-filter>
 
             <!-- Price Range -->
             <div class="filter-section">
@@ -70,6 +55,12 @@
                 (change)="applyFilters()"
                 class="filter-checkbox">
                 ينتهي قريباً
+              </mat-checkbox>
+              <mat-checkbox 
+                [(ngModel)]="showPrescriptionOnly" 
+                (change)="applyFilters()"
+                class="filter-checkbox">
+                يتطلب وصفة طبية
               </mat-checkbox>
             </div>
           </mat-card-content>
@@ -126,11 +117,11 @@
             class="products-grid" 
             [class.grid-view]="viewMode === 'grid'"
             [class.list-view]="viewMode === 'list'">
-            <app-product-card 
+            <app-medicine-card 
               *ngFor="let medicine of medicines"
               [medicine]="medicine"
               (addToCart)="onAddToCart($event)">
-            </app-product-card>
+            </app-medicine-card>
           </div>
           
           <!-- No Results -->

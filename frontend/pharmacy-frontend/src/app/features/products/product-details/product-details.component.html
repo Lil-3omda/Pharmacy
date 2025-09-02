@@ -94,11 +94,11 @@
     <section class="related-products" *ngIf="relatedMedicines.length > 0">
       <h2>منتجات ذات صلة</h2>
       <div class="related-grid">
-        <app-product-card 
+        <app-medicine-card 
           *ngFor="let relatedMedicine of relatedMedicines"
           [medicine]="relatedMedicine"
           (addToCart)="onRelatedProductClick($event)">
-        </app-product-card>
+        </app-medicine-card>
       </div>
     </section>
   </div>

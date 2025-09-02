@@ -7,17 +7,41 @@
       
       <!-- Search Bar -->
       <div class="search-container">
-        <mat-form-field appearance="outline" class="search-field">
-          <mat-label>ابحث عن الأدوية...</mat-label>
-          <input matInput [(ngModel)]="searchTerm" (keyup.enter)="onSearch()" placeholder="اكتب اسم الدواء">
-          <button mat-icon-button matSuffix (click)="onSearch()">
-            <mat-icon>search</mat-icon>
-          </button>
-        </mat-form-field>
+        <app-search-bar 
+          (search)="onSearch($event)"
+          (suggestionSelected)="onSuggestionSelected($event)">
+        </app-search-bar>
+      </div>
+      
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <button mat-raised-button color="accent" routerLink="/prescriptions">
+          <mat-icon>receipt</mat-icon>
+          رفع وصفة طبية
+        </button>
+        <button mat-raised-button routerLink="/offers">
+          <mat-icon>local_offer</mat-icon>
+          العروض والخصومات
+        </button>
       </div>
     </div>
   </section>
 
+  <!-- Offers Banner -->
+  <section class="offers-banner" *ngIf="currentOffer">
+    <div class="container">
+      <div class="banner-content" (click)="viewOffer(currentOffer)">
+        <div class="banner-text">
+          <h3>{{currentOffer.title}}</h3>
+          <p>{{currentOffer.description}}</p>
+        </div>
+        <div class="banner-discount">
+          <span class="discount-percentage">{{currentOffer.discountPercentage}}%</span>
+          <span class="discount-label">خصم</span>
+        </div>
+      </div>
+    </div>
+  </section>
   <!-- Categories Section -->
   <section class="categories-section">
     <div class="container">
@@ -59,11 +83,11 @@
       </div>
 
       <div *ngIf="!isLoading" class="products-grid">
-        <app-product-card 
+        <app-medicine-card 
           *ngFor="let medicine of featuredMedicines"
           [medicine]="medicine"
           (addToCart)="onAddToCart($event)">
-        </app-product-card>
+        </app-medicine-card>
       </div>
     </div>
   </section>

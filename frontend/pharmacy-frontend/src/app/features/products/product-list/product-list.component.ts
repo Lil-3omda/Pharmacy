@@ -17,11 +17,11 @@ export class ProductListComponent implements OnInit {
   isLoading = true;
   
   // Filters
-  searchControl = new FormControl('');
   selectedCategory: number | null = null;
   priceRange = { min: 0, max: 1000 };
   showInStockOnly = false;
   showExpiringSoon = false;
+  showPrescriptionOnly = false;
   
   // Sorting
   sortBy = 'name';
@@ -29,6 +29,7 @@ export class ProductListComponent implements OnInit {
   
   // View mode
   viewMode: 'grid' | 'list' = 'grid';
+  searchTerm = '';
 
   constructor(
     private medicineService: MedicineService,
@@ -40,7 +41,6 @@ export class ProductListComponent implements OnInit {
 
   ngOnInit() {
     this.loadCategories();
-    this.setupSearch();
     this.handleQueryParams();
   }
 
@@ -52,21 +52,11 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-  setupSearch() {
-    this.searchControl.valueChanges
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged()
-      )
-      .subscribe(() => {
-        this.applyFilters();
-      });
-  }
 
   handleQueryParams() {
     this.route.queryParams.subscribe(params => {
       if (params['search']) {
-        this.searchControl.setValue(params['search']);
+        this.searchTerm = params['search'];
       }
       if (params['category']) {
         this.selectedCategory = +params['category'];
@@ -79,12 +69,13 @@ export class ProductListComponent implements OnInit {
     this.isLoading = true;
     
     const filter: MedicineFilter = {
-      searchTerm: this.searchControl.value || undefined,
+      searchTerm: this.searchTerm || undefined,
       categoryId: this.selectedCategory || undefined,
       minPrice: this.priceRange.min > 0 ? this.priceRange.min : undefined,
       maxPrice: this.priceRange.max < 1000 ? this.priceRange.max : undefined,
       inStock: this.showInStockOnly || undefined,
-      expiringSoon: this.showExpiringSoon || undefined
+      expiringSoon: this.showExpiringSoon || undefined,
+      prescriptionRequired: this.showPrescriptionOnly || undefined
     };
 
     this.medicineService.getMedicines(filter).subscribe({
@@ -140,11 +131,12 @@ export class ProductListComponent implements OnInit {
   }
 
   clearFilters() {
-    this.searchControl.setValue('');
+    this.searchTerm = '';
     this.selectedCategory = null;
     this.priceRange = { min: 0, max: 1000 };
     this.showInStockOnly = false;
     this.showExpiringSoon = false;
+    this.showPrescriptionOnly = false;
     this.applyFilters();
   }
 }

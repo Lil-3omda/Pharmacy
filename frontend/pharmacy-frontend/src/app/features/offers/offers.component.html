@@ -1,0 +1,80 @@
+<div class="offers-container">
+  <div class="container">
+    <div class="page-header">
+      <h1>العروض والخصومات</h1>
+      <p>اكتشف أفضل العروض والخصومات على منتجاتنا</p>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-container">
+      <app-loading-spinner message="جاري تحميل العروض..."></app-loading-spinner>
+    </div>
+
+    <div *ngIf="!isLoading" class="offers-content">
+      <!-- Featured Offer -->
+      <div *ngIf="featuredOffer" class="featured-offer">
+        <mat-card class="featured-card">
+          <div class="featured-content">
+            <div class="offer-image">
+              <img [src]="featuredOffer.imageUrl" [alt]="featuredOffer.title">
+              <div class="discount-badge">
+                {{featuredOffer.discountPercentage}}% خصم
+              </div>
+            </div>
+            
+            <div class="offer-details">
+              <h2>{{featuredOffer.title}}</h2>
+              <p>{{featuredOffer.description}}</p>
+              
+              <div class="offer-validity">
+                <mat-icon>schedule</mat-icon>
+                <span>ساري حتى {{featuredOffer.validTo | date:'dd/MM/yyyy'}}</span>
+              </div>
+              
+              <button mat-raised-button color="primary" class="shop-now-btn">
+                <mat-icon>shopping_bag</mat-icon>
+                تسوق الآن
+              </button>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+
+      <!-- Offers Grid -->
+      <div class="offers-grid">
+        <mat-card *ngFor="let offer of offers" class="offer-card">
+          <div class="offer-image-container">
+            <img [src]="offer.imageUrl" [alt]="offer.title">
+            <div class="discount-overlay">
+              <span class="discount-text">{{offer.discountPercentage}}%</span>
+              <span class="discount-label">خصم</span>
+            </div>
+          </div>
+          
+          <mat-card-content>
+            <h3 class="offer-title">{{offer.title}}</h3>
+            <p class="offer-description">{{offer.description}}</p>
+            
+            <div class="offer-validity">
+              <mat-icon>access_time</mat-icon>
+              <span>ينتهي في {{getDaysRemaining(offer.validTo)}} يوم</span>
+            </div>
+          </mat-card-content>
+          
+          <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="viewOfferProducts(offer)">
+              <mat-icon>visibility</mat-icon>
+              عرض المنتجات
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+
+      <!-- No Offers -->
+      <div *ngIf="offers.length === 0" class="no-offers">
+        <mat-icon class="no-offers-icon">local_offer</mat-icon>
+        <h3>لا توجد عروض متاحة حالياً</h3>
+        <p>تابعنا للحصول على أحدث العروض والخصومات</p>
+      </div>
+    </div>
+  </div>
+</div>

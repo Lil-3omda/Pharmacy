@@ -1,0 +1,26 @@
+<div class="search-bar-container">
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>ابحث عن الأدوية...</mat-label>
+    <input 
+      matInput 
+      [(ngModel)]="searchTerm" 
+      (keyup.enter)="onSearch()"
+      (input)="onSearchInput()"
+      placeholder="اكتب اسم الدواء أو المادة الفعالة">
+    <button mat-icon-button matSuffix (click)="onSearch()" [disabled]="!searchTerm.trim()">
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <!-- Search Suggestions -->
+  <div *ngIf="showSuggestions && suggestions.length > 0" class="suggestions-dropdown">
+    <div 
+      *ngFor="let suggestion of suggestions" 
+      class="suggestion-item"
+      (click)="selectSuggestion(suggestion)">
+      <mat-icon>medication</mat-icon>
+      <span>{{suggestion.nameAr}}</span>
+      <small>{{suggestion.categoryNameAr}}</small>
+    </div>
+  </div>
+</div>

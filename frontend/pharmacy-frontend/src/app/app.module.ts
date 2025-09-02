@@ -67,17 +67,32 @@ import { CartComponent } from './features/cart/cart.component';
 import { CheckoutComponent } from './features/checkout/checkout.component';
 import { OrdersComponent } from './features/orders/orders.component';
 import { ProfileComponent } from './features/profile/profile.component';
+import { PrescriptionsComponent } from './features/prescriptions/prescriptions.component';
+import { OffersComponent } from './features/offers/offers.component';
+import { FavoritesComponent } from './features/favorites/favorites.component';
 import { AdminDashboardComponent } from './features/admin/admin-dashboard/admin-dashboard.component';
 import { ManageProductsComponent } from './features/admin/manage-products/manage-products.component';
 import { ManageOrdersComponent } from './features/admin/manage-orders/manage-orders.component';
 import { ManageCategoriesComponent } from './features/admin/manage-categories/manage-categories.component';
 
+// Additional Services
+import { NotificationService } from './core/services/notification.service';
+import { PrescriptionService } from './core/services/prescription.service';
+import { OfferService } from './core/services/offer.service';
+
+// New Shared Components
+import { SearchBarComponent } from './shared/components/search-bar/search-bar.component';
+import { MedicineCardComponent } from './shared/components/medicine-card/medicine-card.component';
+import { CategoryFilterComponent } from './shared/components/category-filter/category-filter.component';
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     FooterComponent,
     ProductCardComponent,
+    MedicineCardComponent,
+    SearchBarComponent,
+    CategoryFilterComponent,
     LoadingSpinnerComponent,
     LoginComponent,
     RegisterComponent,
@@ -88,6 +103,9 @@ import { ManageCategoriesComponent } from './features/admin/manage-categories/ma
     CheckoutComponent,
     OrdersComponent,
     ProfileComponent,
+    PrescriptionsComponent,
+    OffersComponent,
+    FavoritesComponent,
     AdminDashboardComponent,
     ManageProductsComponent,
     ManageOrdersComponent,
@@ -138,6 +156,9 @@ import { ManageCategoriesComponent } from './features/admin/manage-categories/ma
     OrderService,
     CartService,
     CategoryService,
+    NotificationService,
+    PrescriptionService,
+    OfferService,
     AuthGuard,
     RoleGuard,
     {

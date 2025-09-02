@@ -10,12 +10,19 @@
     <nav class="navbar-nav desktop-nav">
       <a mat-button routerLink="/home" routerLinkActive="active">الرئيسية</a>
       <a mat-button routerLink="/products" routerLinkActive="active">المنتجات</a>
+      <a mat-button routerLink="/offers" routerLinkActive="active">العروض</a>
+      <a mat-button routerLink="/prescriptions" routerLinkActive="active" *ngIf="currentUser">الوصفات الطبية</a>
       <a mat-button routerLink="/orders" routerLinkActive="active" *ngIf="currentUser">طلباتي</a>
       <a mat-button routerLink="/admin" routerLinkActive="active" *ngIf="isAdmin()">لوحة التحكم</a>
     </nav>
 
     <!-- User Actions -->
     <div class="navbar-actions">
+      <!-- Favorites -->
+      <button mat-icon-button routerLink="/favorites" matTooltip="المفضلة" *ngIf="currentUser">
+        <mat-icon>favorite</mat-icon>
+      </button>
+
       <!-- Cart -->
       <button mat-icon-button routerLink="/cart" class="cart-button" *ngIf="currentUser">
         <mat-icon matBadge="{{cartItemCount}}" matBadgeColor="accent" [matBadgeHidden]="cartItemCount === 0">shopping_cart</mat-icon>
@@ -37,6 +44,14 @@
           <button mat-menu-item routerLink="/orders">
             <mat-icon>receipt_long</mat-icon>
             <span>طلباتي</span>
+          </button>
+          <button mat-menu-item routerLink="/prescriptions">
+            <mat-icon>description</mat-icon>
+            <span>الوصفات الطبية</span>
+          </button>
+          <button mat-menu-item routerLink="/favorites">
+            <mat-icon>favorite</mat-icon>
+            <span>المفضلة</span>
           </button>
           <mat-divider></mat-divider>
           <button mat-menu-item (click)="logout()">
@@ -61,6 +76,8 @@
   <div class="mobile-nav" [class.open]="isMenuOpen">
     <a mat-button routerLink="/home" (click)="toggleMenu()">الرئيسية</a>
     <a mat-button routerLink="/products" (click)="toggleMenu()">المنتجات</a>
+    <a mat-button routerLink="/offers" (click)="toggleMenu()">العروض</a>
+    <a mat-button routerLink="/prescriptions" (click)="toggleMenu()" *ngIf="currentUser">الوصفات الطبية</a>
     <a mat-button routerLink="/orders" (click)="toggleMenu()" *ngIf="currentUser">طلباتي</a>
     <a mat-button routerLink="/admin" (click)="toggleMenu()" *ngIf="isAdmin()">لوحة التحكم</a>
   </div>

@@ -24,6 +24,12 @@ export class AdminDashboardComponent implements OnInit {
     { id: 3, customer: 'محمد سالم', total: 156.75, status: 'Approved', date: '2025-01-14' }
   ];
 
+  recentPrescriptions = [
+    { id: 1, doctorName: 'أحمد محمد', patient: 'سارة علي', date: '2025-01-15', status: 'Pending' },
+    { id: 2, doctorName: 'فاطمة أحمد', patient: 'محمد سالم', date: '2025-01-14', status: 'Pending' }
+  ];
+
+  pendingPrescriptions = 2;
   lowStockProducts = [
     { name: 'باراسيتامول', stock: 5, category: 'مسكنات' },
     { name: 'أموكسيسيلين', stock: 3, category: 'مضادات حيوية' },

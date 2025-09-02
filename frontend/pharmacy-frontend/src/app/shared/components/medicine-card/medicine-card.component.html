@@ -1,0 +1,90 @@
+<mat-card class="medicine-card" [class.out-of-stock]="isOutOfStock()" [class.prescription-required]="medicine.prescriptionRequired">
+  <div class="card-header">
+    <div class="medicine-image-container" (click)="viewDetails()">
+      <img [src]="medicine.imageUrl" [alt]="medicine.nameAr" class="medicine-image">
+      
+      <!-- Stock Badges -->
+      <div class="stock-badge out-of-stock" *ngIf="isOutOfStock()">
+        نفد المخزون
+      </div>
+      <div class="stock-badge low-stock" *ngIf="isLowStock()">
+        مخزون قليل
+      </div>
+      
+      <!-- Prescription Badge -->
+      <div class="prescription-badge" *ngIf="medicine.prescriptionRequired">
+        <mat-icon>receipt</mat-icon>
+        <span>يتطلب وصفة</span>
+      </div>
+      
+      <!-- Discount Badge -->
+      <div class="discount-badge" *ngIf="hasDiscount">
+        {{discountPercentage}}% خصم
+      </div>
+    </div>
+  </div>
+  
+  <mat-card-content class="medicine-content">
+    <div class="medicine-header">
+      <h3 class="medicine-name" (click)="viewDetails()">{{medicine.nameAr}}</h3>
+      <p class="medicine-name-en">{{medicine.nameEn}}</p>
+      <mat-chip class="category-chip">{{medicine.categoryNameAr}}</mat-chip>
+    </div>
+    
+    <p class="medicine-description">{{medicine.descriptionAr}}</p>
+    
+    <div class="medicine-details">
+      <div class="detail-item" *ngIf="medicine.manufacturer">
+        <mat-icon>business</mat-icon>
+        <span>{{medicine.manufacturer}}</span>
+      </div>
+      <div class="detail-item" *ngIf="medicine.dosage">
+        <mat-icon>medication</mat-icon>
+        <span>{{medicine.dosage}}</span>
+      </div>
+      <div class="detail-item">
+        <mat-icon>inventory</mat-icon>
+        <span>متوفر: {{medicine.stock}}</span>
+      </div>
+    </div>
+    
+    <div class="price-section">
+      <div class="price-container">
+        <span class="current-price">{{getCurrentPrice()}} ر.س</span>
+        <span class="original-price" *ngIf="hasDiscount">{{medicine.price}} ر.س</span>
+      </div>
+      <span class="price-label">للقطعة الواحدة</span>
+    </div>
+  </mat-card-content>
+  
+  <mat-card-actions class="medicine-actions" *ngIf="showActions">
+    <div class="action-buttons">
+      <button 
+        mat-icon-button 
+        color="primary" 
+        (click)="viewDetails()"
+        matTooltip="عرض التفاصيل">
+        <mat-icon>visibility</mat-icon>
+      </button>
+      
+      <button 
+        mat-icon-button 
+        (click)="toggleFavorite()"
+        [color]="isFavorite ? 'warn' : ''"
+        matTooltip="إضافة للمفضلة">
+        <mat-icon>{{isFavorite ? 'favorite' : 'favorite_border'}}</mat-icon>
+      </button>
+      
+      <button 
+        mat-raised-button 
+        color="primary" 
+        (click)="onAddToCart()"
+        [disabled]="isOutOfStock() || medicine.prescriptionRequired"
+        class="add-to-cart-btn">
+        <mat-icon>add_shopping_cart</mat-icon>
+        <span *ngIf="!medicine.prescriptionRequired">إضافة للسلة</span>
+        <span *ngIf="medicine.prescriptionRequired">يتطلب وصفة</span>
+      </button>
+    </div>
+  </mat-card-actions>
+</mat-card>

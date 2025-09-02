@@ -15,6 +15,9 @@ import { CartComponent } from './features/cart/cart.component';
 import { CheckoutComponent } from './features/checkout/checkout.component';
 import { OrdersComponent } from './features/orders/orders.component';
 import { ProfileComponent } from './features/profile/profile.component';
+import { PrescriptionsComponent } from './features/prescriptions/prescriptions.component';
+import { OffersComponent } from './features/offers/offers.component';
+import { FavoritesComponent } from './features/favorites/favorites.component';
 import { AdminDashboardComponent } from './features/admin/admin-dashboard/admin-dashboard.component';
 import { ManageProductsComponent } from './features/admin/manage-products/manage-products.component';
 import { ManageOrdersComponent } from './features/admin/manage-orders/manage-orders.component';
@@ -27,6 +30,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'products', component: ProductListComponent },
   { path: 'products/:id', component: ProductDetailsComponent },
+  { path: 'offers', component: OffersComponent },
   { 
     path: 'cart', 
     component: CartComponent, 
@@ -40,6 +44,16 @@ const routes: Routes = [
   { 
     path: 'orders', 
     component: OrdersComponent, 
+    canActivate: [AuthGuard] 
+  },
+  { 
+    path: 'prescriptions', 
+    component: PrescriptionsComponent, 
+    canActivate: [AuthGuard] 
+  },
+  { 
+    path: 'favorites', 
+    component: FavoritesComponent, 
     canActivate: [AuthGuard] 
   },
   { 
