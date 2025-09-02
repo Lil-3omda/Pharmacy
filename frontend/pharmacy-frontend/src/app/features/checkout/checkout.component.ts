@@ -1,10 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CartService, CartItem } from '../../core/services/cart.service';
 import { OrderService } from '../../core/services/order.service';
 
+@Component({
+  selector: 'app-checkout',
+  templateUrl: './checkout.component.html',
+  styleUrls: ['./checkout.component.scss']
+})
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.component.html',

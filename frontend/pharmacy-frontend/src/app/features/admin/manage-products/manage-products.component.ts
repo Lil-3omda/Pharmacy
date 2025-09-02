@@ -1,10 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MedicineService, Medicine } from '../../../core/services/medicine.service';
 import { CategoryService, Category } from '../../../core/services/category.service';
 
+@Component({
+  selector: 'app-manage-products',
+  templateUrl: './manage-products.component.html',
+  styleUrls: ['./manage-products.component.scss']
+})
 @Component({
   selector: 'app-manage-products',
   templateUrl: './manage-products.component.html',

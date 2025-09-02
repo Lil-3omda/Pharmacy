@@ -21,8 +21,9 @@ export class AppComponent implements OnInit {
     // Hide navbar on auth pages
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        this.showNavbar = !['/login', '/register'].includes(event.url);
+      .subscribe((event) => {
+        const navEvent = event as NavigationEnd;
+        this.showNavbar = !['/login', '/register'].includes(navEvent.url);
       });
   }
 }

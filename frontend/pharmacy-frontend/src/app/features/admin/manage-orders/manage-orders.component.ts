@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface AdminOrder {
@@ -17,6 +18,11 @@ export interface AdminOrder {
   }[];
 }
 
+@Component({
+  selector: 'app-manage-orders',
+  templateUrl: './manage-orders.component.html',
+  styleUrls: ['./manage-orders.component.scss']
+})
 @Component({
   selector: 'app-manage-orders',
   templateUrl: './manage-orders.component.html',

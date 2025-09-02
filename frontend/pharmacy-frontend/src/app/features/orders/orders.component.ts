@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../../core/services/order.service';
 
 export interface Order {
@@ -16,6 +17,11 @@ export interface Order {
   }[];
 }
 
+@Component({
+  selector: 'app-orders',
+  templateUrl: './orders.component.html',
+  styleUrls: ['./orders.component.scss']
+})
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',

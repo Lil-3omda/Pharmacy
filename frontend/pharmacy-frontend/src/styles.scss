@@ -1,27 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
-@import '~@angular/material/theming';
-@import '~@fortawesome/fontawesome-free/css/all.css';
 
 // Custom theme colors
 $primary-color: #3498db;
 $accent-color: #27ae60;
 $warn-color: #e74c3c;
-
-// Create custom theme
-$custom-primary: mat-palette($mat-blue, 500);
-$custom-accent: mat-palette($mat-green, 500);
-$custom-warn: mat-palette($mat-red, 500);
-
-$custom-theme: mat-light-theme((
-  color: (
-    primary: $custom-primary,
-    accent: $custom-accent,
-    warn: $custom-warn,
-  )
-));
-
-@include mat-core();
-@include mat-all-component-themes($custom-theme);
 
 html, body { 
   height: 100%; 
