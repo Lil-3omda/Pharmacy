@@ -87,7 +87,7 @@ namespace Pharmacy.Application.Services.Implementations
                     ProductName = m.NameAr,
                     CurrentStock = m.Stock,
                     MinimumLevel = 10,
-                    Category = m.Category.NameAr
+                    Category = m.Category.Name
                 })
                 .ToListAsync();
         }

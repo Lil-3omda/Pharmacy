@@ -96,7 +96,7 @@ namespace Pharmacy.Infrastructure.Data
                 {
                     new Category
                     {
-                        NameAr = "مضادات حيوية",
+                        Name = "مضادات حيوية",
                         NameEn = "Antibiotics",
                         DescriptionAr = "أدوية لعلاج الالتهابات البكتيرية",
                         DescriptionEn = "Medications for treating bacterial infections",
@@ -105,7 +105,7 @@ namespace Pharmacy.Infrastructure.Data
                     },
                     new Category
                     {
-                        NameAr = "مسكنات الألم",
+                        Name = "مسكنات الألم",
                         NameEn = "Painkillers",
                         DescriptionAr = "أدوية لتخفيف الألم",
                         DescriptionEn = "Medications for pain relief",
@@ -114,7 +114,7 @@ namespace Pharmacy.Infrastructure.Data
                     },
                     new Category
                     {
-                        NameAr = "فيتامينات",
+                        Name = "فيتامينات",
                         NameEn = "Vitamins",
                         DescriptionAr = "مكملات غذائية وفيتامينات",
                         DescriptionEn = "Nutritional supplements and vitamins",
@@ -123,7 +123,7 @@ namespace Pharmacy.Infrastructure.Data
                     },
                     new Category
                     {
-                        NameAr = "مستحضرات تجميل",
+                        Name = "مستحضرات تجميل",
                         NameEn = "Cosmetics",
                         DescriptionAr = "منتجات العناية بالبشرة والشعر",
                         DescriptionEn = "Skin and hair care products",
@@ -132,7 +132,7 @@ namespace Pharmacy.Infrastructure.Data
                     },
                     new Category
                     {
-                        NameAr = "أدوية القلب",
+                        Name = "أدوية القلب",
                         NameEn = "Cardiovascular",
                         DescriptionAr = "أدوية لعلاج أمراض القلب والشرايين",
                         DescriptionEn = "Medications for heart and cardiovascular diseases",
@@ -161,7 +161,7 @@ namespace Pharmacy.Infrastructure.Data
                         NameEn = "Amoxicillin",
                         DescriptionAr = "مضاد حيوي واسع الطيف",
                         DescriptionEn = "Broad-spectrum antibiotic",
-                        CategoryId = categories.First(c => c.NameAr == "مضادات حيوية").Id,
+                        CategoryId = categories.First(c => c.Name == "مضادات حيوية").Id,
                         Price = 25.50m,
                         Stock = 100,
                         ExpiryDate = DateTime.UtcNow.AddYears(2),
@@ -175,7 +175,7 @@ namespace Pharmacy.Infrastructure.Data
                         NameEn = "Azithromycin",
                         DescriptionAr = "مضاد حيوي لعلاج التهابات الجهاز التنفسي",
                         DescriptionEn = "Antibiotic for respiratory infections",
-                        CategoryId = categories.First(c => c.NameAr == "مضادات حيوية").Id,
+                        CategoryId = categories.First(c => c.Name == "مضادات حيوية").Id,
                         Price = 45.75m,
                         Stock = 75,
                         ExpiryDate = DateTime.UtcNow.AddYears(2),
@@ -191,7 +191,7 @@ namespace Pharmacy.Infrastructure.Data
                         NameEn = "Paracetamol",
                         DescriptionAr = "مسكن للألم وخافض للحرارة",
                         DescriptionEn = "Pain reliever and fever reducer",
-                        CategoryId = categories.First(c => c.NameAr == "مسكنات الألم").Id,
+                        CategoryId = categories.First(c => c.Name == "مسكنات الألم").Id,
                         Price = 15.25m,
                         Stock = 200,
                         ExpiryDate = DateTime.UtcNow.AddYears(3),
@@ -205,7 +205,7 @@ namespace Pharmacy.Infrastructure.Data
                         NameEn = "Ibuprofen",
                         DescriptionAr = "مسكن للألم ومضاد للالتهاب",
                         DescriptionEn = "Pain reliever and anti-inflammatory",
-                        CategoryId = categories.First(c => c.NameAr == "مسكنات الألم").Id,
+                        CategoryId = categories.First(c => c.Name == "مسكنات الألم").Id,
                         Price = 18.50m,
                         Stock = 150,
                         ExpiryDate = DateTime.UtcNow.AddYears(3),
@@ -221,7 +221,7 @@ namespace Pharmacy.Infrastructure.Data
                         NameEn = "Vitamin C",
                         DescriptionAr = "مكمل غذائي لتقوية المناعة",
                         DescriptionEn = "Nutritional supplement for immune support",
-                        CategoryId = categories.First(c => c.NameAr == "فيتامينات").Id,
+                        CategoryId = categories.First(c => c.Name == "فيتامينات").Id,
                         Price = 35.00m,
                         Stock = 80,
                         ExpiryDate = DateTime.UtcNow.AddYears(2),
@@ -235,7 +235,7 @@ namespace Pharmacy.Infrastructure.Data
                         NameEn = "Vitamin D",
                         DescriptionAr = "فيتامين ضروري لصحة العظام",
                         DescriptionEn = "Essential vitamin for bone health",
-                        CategoryId = categories.First(c => c.NameAr == "فيتامينات").Id,
+                        CategoryId = categories.First(c => c.Name == "فيتامينات").Id,
                         Price = 42.75m,
                         Stock = 60,
                         ExpiryDate = DateTime.UtcNow.AddYears(2),
@@ -251,7 +251,7 @@ namespace Pharmacy.Infrastructure.Data
                         NameEn = "Moisturizing Cream",
                         DescriptionAr = "كريم ترطيب للبشرة الجافة",
                         DescriptionEn = "Moisturizing cream for dry skin",
-                        CategoryId = categories.First(c => c.NameAr == "مستحضرات تجميل").Id,
+                        CategoryId = categories.First(c => c.Name == "مستحضرات تجميل").Id,
                         Price = 55.00m,
                         Stock = 45,
                         ExpiryDate = DateTime.UtcNow.AddYears(1),
@@ -267,7 +267,7 @@ namespace Pharmacy.Infrastructure.Data
                         NameEn = "Aspirin",
                         DescriptionAr = "دواء لسيولة الدم",
                         DescriptionEn = "Blood thinner medication",
-                        CategoryId = categories.First(c => c.NameAr == "أدوية القلب").Id,
+                        CategoryId = categories.First(c => c.Name == "أدوية القلب").Id,
                         Price = 12.50m,
                         Stock = 120,
                         ExpiryDate = DateTime.UtcNow.AddYears(2),

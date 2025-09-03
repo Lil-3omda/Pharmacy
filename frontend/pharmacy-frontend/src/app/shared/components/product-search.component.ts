@@ -32,12 +32,14 @@ export class ProductSearchComponent implements OnInit {
   }
 
   async loadCategories(): Promise<void> {
-    try {
-      this.categories = await this.categoryService.getCategories().toPromise();
-    } catch (error) {
-      console.error('Error loading categories:', error);
-    }
+  try {
+    const result = await this.categoryService.getCategories().toPromise();
+    this.categories = result ?? []; // fallback to empty array
+  } catch (error) {
+    console.error('Error loading categories:', error);
+    this.categories = [];
   }
+}
 
   setupSearchSubscriptions(): void {
     this.searchControl.valueChanges

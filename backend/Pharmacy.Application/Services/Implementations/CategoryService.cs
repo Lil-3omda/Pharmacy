@@ -29,7 +29,7 @@ namespace Pharmacy.Application.Services.Implementations
             return new CategoryDto
             {
                 Id = category.Id,
-                NameAr = category.NameAr,
+                NameAr = category.Name,
                 NameEn = category.NameEn,
                 DescriptionAr = category.DescriptionAr,
                 DescriptionEn = category.DescriptionEn,
@@ -48,7 +48,7 @@ namespace Pharmacy.Application.Services.Implementations
             return categories.Select(c => new CategoryDto
             {
                 Id = c.Id,
-                NameAr = c.NameAr,
+                NameAr = c.Name,
                 NameEn = c.NameEn,
                 DescriptionAr = c.DescriptionAr,
                 DescriptionEn = c.DescriptionEn,
@@ -61,7 +61,7 @@ namespace Pharmacy.Application.Services.Implementations
         {
             var category = new Category
             {
-                NameAr = createDto.NameAr,
+                Name = createDto.NameAr,
                 NameEn = createDto.NameEn,
                 DescriptionAr = createDto.DescriptionAr,
                 DescriptionEn = createDto.DescriptionEn,
@@ -81,7 +81,7 @@ namespace Pharmacy.Application.Services.Implementations
             if (category == null)
                 throw new InvalidOperationException("Category not found");
 
-            category.NameAr = updateDto.NameAr;
+            category.Name = updateDto.NameAr;
             category.NameEn = updateDto.NameEn;
             category.DescriptionAr = updateDto.DescriptionAr;
             category.DescriptionEn = updateDto.DescriptionEn;

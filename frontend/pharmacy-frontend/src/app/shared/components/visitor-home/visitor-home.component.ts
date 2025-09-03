@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ProductService } from '../../core/services/product.service';
+import { ProductService } from '../../../core/services/product.service';
 import { CategoryService } from '../../../core/services/category.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-visitor-home',
   templateUrl: './visitor-home.component.html',
-  styleUrls: ['./visitor-home.component.scss']
 })
 export class VisitorHomeComponent implements OnInit {
   featuredProducts: any[] = [];
@@ -26,7 +26,9 @@ export class VisitorHomeComponent implements OnInit {
 
   async loadFeaturedProducts(): Promise<void> {
     try {
-      const response = await this.productService.getProducts({ page: 1, pageSize: 8 }).toPromise();
+      const response = await firstValueFrom(
+        this.productService.getProducts({ page: 1, pageSize: 8 })
+      );
       this.featuredProducts = response.products;
     } catch (error) {
       console.error('Error loading featured products:', error);
@@ -35,7 +37,7 @@ export class VisitorHomeComponent implements OnInit {
 
   async loadCategories(): Promise<void> {
     try {
-      this.categories = await this.categoryService.getCategories().toPromise();
+      this.categories = await firstValueFrom(this.categoryService.getCategories());
     } catch (error) {
       console.error('Error loading categories:', error);
     }

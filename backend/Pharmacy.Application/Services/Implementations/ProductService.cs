@@ -175,7 +175,7 @@ namespace Pharmacy.Application.Services.Implementations
                 IsActive = product.IsActive,
                 CategoryId = product.CategoryId,
                 CategoryName = product.Category?.Name ?? "",
-                CategoryNameArabic = product.Category?.NameAr ?? ""
+                CategoryNameArabic = product.Category?.Name ?? ""
             };
         }
 

@@ -7,7 +7,7 @@
         <mat-card class="pharmacy-card stat-card">
           <mat-card-content class="text-center">
             <mat-icon class="stat-icon text-primary">inventory</mat-icon>
-            <h3>{{ dashboardStats.totalProducts }}</h3>
+            <h3>{{ dashboardStats?.totalProducts }}</h3>
             <p class="arabic-text">إجمالي المنتجات</p>
           </mat-card-content>
         </mat-card>
@@ -17,7 +17,7 @@
         <mat-card class="pharmacy-card stat-card">
           <mat-card-content class="text-center">
             <mat-icon class="stat-icon text-success">shopping_cart</mat-icon>
-            <h3>{{ dashboardStats.totalOrders }}</h3>
+            <h3>{{ dashboardStats?.totalOrders }}</h3>
             <p class="arabic-text">إجمالي الطلبات</p>
           </mat-card-content>
         </mat-card>
@@ -27,7 +27,7 @@
         <mat-card class="pharmacy-card stat-card">
           <mat-card-content class="text-center">
             <mat-icon class="stat-icon text-info">attach_money</mat-icon>
-            <h3>{{ dashboardStats.totalRevenue | currency:'SAR':'symbol':'1.2-2':'ar' }}</h3>
+            <h3>{{ dashboardStats?.totalRevenue | currency:'SAR':'symbol':'1.2-2':'ar' }}</h3>
             <p class="arabic-text">إجمالي الإيرادات</p>
           </mat-card-content>
         </mat-card>
@@ -37,7 +37,7 @@
         <mat-card class="pharmacy-card stat-card">
           <mat-card-content class="text-center">
             <mat-icon class="stat-icon text-warning">warning</mat-icon>
-            <h3>{{ dashboardStats.lowStockAlerts }}</h3>
+            <h3>{{ dashboardStats?.lowStockAlerts }}</h3>
             <p class="arabic-text">تنبيهات المخزون</p>
           </mat-card-content>
         </mat-card>
@@ -60,7 +60,7 @@
       <div class="col-lg-4 mb-4">
         <mat-card class="pharmacy-card">
           <mat-card-header>
-            <mat-card-title class="arabic-text">أكثر المنتجات مبيعاً</mat-title>
+            <mat-card-title class="arabic-text">أكثر المنتجات مبيعاً</mat-card-title>
           </mat-card-header>
           <mat-card-content>
             <div class="top-products-list">

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart, ChartConfiguration, ChartType } from 'chart.js';
-import { AnalyticsService } from '../../core/services/analytics.service';
+import { AnalyticsService, DashboardStats, SalesChartData, TopProduct, LowStockAlert } from '../../../core/services/analytics.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-analytics-dashboard',
@@ -8,11 +9,12 @@ import { AnalyticsService } from '../../core/services/analytics.service';
   styleUrls: ['./analytics-dashboard.component.scss']
 })
 export class AnalyticsDashboardComponent implements OnInit {
-  dashboardStats: any = {};
+
+  dashboardStats: DashboardStats | null = null;
   salesChart: Chart | undefined;
-  topProducts: any[] = [];
-  lowStockAlerts: any[] = [];
-  
+  topProducts: TopProduct[] = [];
+  lowStockAlerts: LowStockAlert[] = [];
+
   salesChartConfig: ChartConfiguration = {
     type: 'line' as ChartType,
     data: {
@@ -57,7 +59,7 @@ export class AnalyticsDashboardComponent implements OnInit {
 
   async loadDashboardStats(): Promise<void> {
     try {
-      this.dashboardStats = await this.analyticsService.getDashboardStats().toPromise();
+      this.dashboardStats = await firstValueFrom(this.analyticsService.getDashboardStats());
     } catch (error) {
       console.error('Error loading dashboard stats:', error);
     }
@@ -68,12 +70,14 @@ export class AnalyticsDashboardComponent implements OnInit {
       const fromDate = new Date();
       fromDate.setDate(fromDate.getDate() - 30);
       const toDate = new Date();
-      
-      const salesData = await this.analyticsService.getSalesChartData(fromDate, toDate).toPromise();
-      
+
+      const salesData: SalesChartData[] = await firstValueFrom(
+        this.analyticsService.getSalesChartData(fromDate, toDate)
+      );
+
       this.salesChartConfig.data.labels = salesData.map(d => d.date);
       this.salesChartConfig.data.datasets[0].data = salesData.map(d => d.sales);
-      
+
       if (this.salesChart) {
         this.salesChart.update();
       }
@@ -84,7 +88,7 @@ export class AnalyticsDashboardComponent implements OnInit {
 
   async loadTopProducts(): Promise<void> {
     try {
-      this.topProducts = await this.analyticsService.getTopSellingProducts().toPromise();
+      this.topProducts = await firstValueFrom(this.analyticsService.getTopSellingProducts());
     } catch (error) {
       console.error('Error loading top products:', error);
     }
@@ -92,7 +96,7 @@ export class AnalyticsDashboardComponent implements OnInit {
 
   async loadLowStockAlerts(): Promise<void> {
     try {
-      this.lowStockAlerts = await this.analyticsService.getLowStockAlerts().toPromise();
+      this.lowStockAlerts = await firstValueFrom(this.analyticsService.getLowStockAlerts());
     } catch (error) {
       console.error('Error loading low stock alerts:', error);
     }

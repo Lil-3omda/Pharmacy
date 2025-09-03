@@ -9,7 +9,7 @@ namespace Pharmacy.Core.Entities
 
         [Required]
         [StringLength(50)]
-        public string NameAr { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
         [Required]
         [StringLength(50)]
