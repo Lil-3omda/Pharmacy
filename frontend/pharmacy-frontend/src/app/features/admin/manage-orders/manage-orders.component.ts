@@ -22,11 +22,6 @@ export interface AdminOrder {
   templateUrl: './manage-orders.component.html',
   styleUrls: ['./manage-orders.component.scss']
 })
-@Component({
-  selector: 'app-manage-orders',
-  templateUrl: './manage-orders.component.html',
-  styleUrls: ['./manage-orders.component.scss']
-})
 export class ManageOrdersComponent implements OnInit {
   orders: AdminOrder[] = [];
   isLoading = true;

@@ -34,7 +34,6 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 
-
 // App Components
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -50,12 +49,18 @@ import { MedicineService } from './core/services/medicine.service';
 import { OrderService } from './core/services/order.service';
 import { CartService } from './core/services/cart.service';
 import { CategoryService } from './core/services/category.service';
+import { NotificationService } from './core/services/notification.service';
+import { PrescriptionService } from './core/services/prescription.service';
+import { OfferService } from './core/services/offer.service';
 
 // Shared Components
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { ProductCardComponent } from './shared/components/product-card/product-card.component';
 import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
+import { SearchBarComponent } from './shared/components/search-bar/search-bar.component';
+import { MedicineCardComponent } from './shared/components/medicine-card/medicine-card.component';
+import { CategoryFilterComponent } from './shared/components/category-filter/category-filter.component';
 
 // Feature Components
 import { LoginComponent } from './features/auth/login/login.component';
@@ -75,15 +80,6 @@ import { ManageProductsComponent } from './features/admin/manage-products/manage
 import { ManageOrdersComponent } from './features/admin/manage-orders/manage-orders.component';
 import { ManageCategoriesComponent } from './features/admin/manage-categories/manage-categories.component';
 
-// Additional Services
-import { NotificationService } from './core/services/notification.service';
-import { PrescriptionService } from './core/services/prescription.service';
-import { OfferService } from './core/services/offer.service';
-
-// New Shared Components
-import { SearchBarComponent } from './shared/components/search-bar/search-bar.component';
-import { MedicineCardComponent } from './shared/components/medicine-card/medicine-card.component';
-import { CategoryFilterComponent } from './shared/components/category-filter/category-filter.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -148,8 +144,7 @@ import { CategoryFilterComponent } from './shared/components/category-filter/cat
     MatRadioModule,
     MatDatepickerModule,
     MatNativeDateModule,
-
-      ],
+  ],
   providers: [
     AuthService,
     MedicineService,

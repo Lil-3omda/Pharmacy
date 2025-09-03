@@ -9,10 +9,10 @@ namespace Pharmacy.Core.Entities
         public int Id { get; set; }
 
         public int OrderId { get; set; }
-        public virtual Order Order { get; set; }
+        public virtual Order Order { get; set; } = null!;
 
-        public int ProductId { get; set; }
-        public virtual Product Product { get; set; }
+        public int MedicineId { get; set; }
+        public virtual Medicine Medicine { get; set; } = null!;
 
         [Required]
         public int Quantity { get; set; }

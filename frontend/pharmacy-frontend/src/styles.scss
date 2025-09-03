@@ -1,84 +1,156 @@
-@import '~@angular/material/theming';
-@import '~bootstrap/scss/bootstrap-rtl';
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
 
-// Define custom pharmacy theme
-$pharmacy-primary: mat-palette($mat-blue, 600);
-$pharmacy-accent: mat-palette($mat-green, 500);
-$pharmacy-warn: mat-palette($mat-red);
-
-$pharmacy-theme: mat-light-theme((
-  color: (
-    primary: $pharmacy-primary,
-    accent: $pharmacy-accent,
-    warn: $pharmacy-warn,
-  )
-));
-
-@include mat-core();
-@include angular-material-theme($pharmacy-theme);
-
-// RTL Support
-[dir="rtl"] {
-  .mat-form-field-label {
-    text-align: right;
-  }
-  
-  .mat-select-arrow {
-    left: 16px;
-    right: auto;
-  }
-  
-  .mat-checkbox-layout {
-    direction: rtl;
-  }
+// Global styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-// Custom pharmacy styles
-.pharmacy-card {
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-  }
-}
-
-.pharmacy-button {
-  border-radius: 8px;
-  font-weight: 500;
-  text-transform: none;
-}
-
-.low-stock {
-  color: #f44336;
-  font-weight: bold;
-}
-
-.out-of-stock {
-  color: #9e9e9e;
-  text-decoration: line-through;
-}
-
-// Arabic font support
-.arabic-text {
-  font-family: 'Tajawal', 'Cairo', sans-serif;
+html, body {
+  height: 100%;
+  font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   direction: rtl;
   text-align: right;
 }
 
-// Responsive grid
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-  padding: 20px;
+body {
+  background-color: #f8f9fa;
+  color: #2c3e50;
+  line-height: 1.6;
 }
 
+// Arabic text styling
+.arabic-text {
+  font-family: 'Cairo', 'Tajawal', sans-serif;
+  direction: rtl;
+  text-align: right;
+}
+
+// Material Design overrides for RTL
+.mat-mdc-form-field {
+  direction: rtl;
+  text-align: right;
+}
+
+.mat-mdc-select-panel {
+  direction: rtl;
+}
+
+.mat-mdc-menu-panel {
+  direction: rtl;
+}
+
+// Custom utility classes
+.full-width {
+  width: 100%;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+// Loading container
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+// Responsive utilities
 @media (max-width: 768px) {
-  .product-grid {
-    grid-template-columns: 1fr;
-    padding: 10px;
+  .container {
+    padding: 0 16px;
   }
+}
+
+// Snackbar styles
+.success-snackbar {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.error-snackbar {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+.warning-snackbar {
+  background-color: #ff9800 !important;
+  color: white !important;
+}
+
+.info-snackbar {
+  background-color: #2196f3 !important;
+  color: white !important;
+}
+
+// Custom button styles
+.pharmacy-button {
+  border-radius: 8px;
+  font-weight: 500;
+  text-transform: none;
+  padding: 8px 16px;
+}
+
+// Card styles
+.pharmacy-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// Status colors
+.status-pending {
+  background-color: #f39c12 !important;
+  color: white !important;
+}
+
+.status-approved {
+  background-color: #3498db !important;
+  color: white !important;
+}
+
+.status-completed {
+  background-color: #27ae60 !important;
+  color: white !important;
+}
+
+.status-rejected {
+  background-color: #e74c3c !important;
+  color: white !important;
+}
+
+.status-cancelled {
+  background-color: #95a5a6 !important;
+  color: white !important;
+}
+
+// Stock status colors
+.out-of-stock {
+  background-color: #e74c3c !important;
+  color: white !important;
+}
+
+.low-stock {
+  background-color: #f39c12 !important;
+  color: white !important;
+}
+
+.in-stock {
+  background-color: #27ae60 !important;
+  color: white !important;
 }

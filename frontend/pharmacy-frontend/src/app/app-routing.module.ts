@@ -2,47 +2,95 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
+import { HomeComponent } from './features/home/home.component';
+import { LoginComponent } from './features/auth/login/login.component';
+import { RegisterComponent } from './features/auth/register/register.component';
+import { ProductListComponent } from './features/products/product-list/product-list.component';
+import { ProductDetailsComponent } from './features/products/product-details/product-details.component';
+import { CartComponent } from './features/cart/cart.component';
+import { CheckoutComponent } from './features/checkout/checkout.component';
+import { OrdersComponent } from './features/orders/orders.component';
+import { ProfileComponent } from './features/profile/profile.component';
+import { PrescriptionsComponent } from './features/prescriptions/prescriptions.component';
+import { OffersComponent } from './features/offers/offers.component';
+import { FavoritesComponent } from './features/favorites/favorites.component';
+import { AdminDashboardComponent } from './features/admin/admin-dashboard/admin-dashboard.component';
+import { ManageProductsComponent } from './features/admin/manage-products/manage-products.component';
+import { ManageOrdersComponent } from './features/admin/manage-orders/manage-orders.component';
+import { ManageCategoriesComponent } from './features/admin/manage-categories/manage-categories.component';
 
 const routes: Routes = [
   // Public routes
-  {
-    path: '',
-    loadChildren: () => import('./modules/visitor/visitor.module').then(m => m.VisitorModule)
-  },
-  {
-    path: 'products',
-    loadChildren: () => import('./modules/products/products.module').then(m => m.ProductsModule)
-  },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: 'home', component: HomeComponent },
+  { path: 'products', component: ProductListComponent },
+  { path: 'products/:id', component: ProductDetailsComponent },
+  { path: 'offers', component: OffersComponent },
   
   // Auth routes
-  {
-    path: 'auth',
-    loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule)
-  },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
   
   // Protected routes
   {
-    path: 'admin',
-    loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule),
-    canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['Admin'] }
+    path: 'cart',
+    component: CartComponent,
+    canActivate: [AuthGuard]
   },
   {
-    path: 'staff',
-    loadChildren: () => import('./modules/staff/staff.module').then(m => m.StaffModule),
-    canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['Admin', 'Staff'] }
+    path: 'checkout',
+    component: CheckoutComponent,
+    canActivate: [AuthGuard]
   },
   {
-    path: 'client',
-    loadChildren: () => import('./modules/client/client.module').then(m => m.ClientModule),
-    canActivate: [AuthGuard, RoleGuard],
-    data: { roles: ['Client'] }
+    path: 'orders',
+    component: OrdersComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'prescriptions',
+    component: PrescriptionsComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'favorites',
+    component: FavoritesComponent,
+    canActivate: [AuthGuard]
   },
   
-  // Error routes
-  { path: 'unauthorized', component: UnauthorizedComponent },
-  { path: '**', redirectTo: '' }
+  // Admin routes
+  {
+    path: 'admin',
+    component: AdminDashboardComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin', 'Pharmacist'] }
+  },
+  {
+    path: 'admin/products',
+    component: ManageProductsComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin', 'Pharmacist'] }
+  },
+  {
+    path: 'admin/orders',
+    component: ManageOrdersComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin', 'Pharmacist'] }
+  },
+  {
+    path: 'admin/categories',
+    component: ManageCategoriesComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['Admin', 'Pharmacist'] }
+  },
+  
+  // Fallback
+  { path: '**', redirectTo: '/home' }
 ];
 
 @NgModule({

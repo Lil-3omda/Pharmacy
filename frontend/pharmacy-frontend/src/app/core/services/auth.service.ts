@@ -95,6 +95,15 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
+  getUserRole(): string {
+    const user = this.getCurrentUser();
+    return user ? user.role : '';
+  }
+
+  isAuthenticated(): boolean {
+    return this.isTokenValid();
+  }
+
   isTokenValid(): boolean {
     const token = this.getToken();
     if (!token) return false;
