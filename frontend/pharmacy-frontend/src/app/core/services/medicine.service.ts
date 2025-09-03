@@ -26,6 +26,7 @@ export interface MedicineFilter {
   maxPrice?: number;
   inStock?: boolean;
   expiringSoon?: boolean;
+   prescriptionRequired?: boolean;
 }
 
 @Injectable({

@@ -1,0 +1,24 @@
+<div class="scanner-container">
+  <div class="scanner-header">
+    <h4 class="arabic-text">مسح الباركود</h4>
+    <button mat-icon-button (click)="stopScanning()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  
+  <div class="scanner-body">
+    <video #videoElement autoplay playsinline class="scanner-video"></video>
+    <div class="scanner-overlay">
+      <div class="scan-area"></div>
+      <p class="arabic-text scan-instruction">وجه الكاميرا نحو الباركود</p>
+    </div>
+  </div>
+  
+  <div class="scanner-footer">
+    <button mat-raised-button color="primary" (click)="startScanning()" 
+            [disabled]="scanning">
+      <mat-icon>qr_code_scanner</mat-icon>
+      {{ scanning ? 'جاري المسح...' : 'بدء المسح' }}
+    </button>
+  </div>
+</div>

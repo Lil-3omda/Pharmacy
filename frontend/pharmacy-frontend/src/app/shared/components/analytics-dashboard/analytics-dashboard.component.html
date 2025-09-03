@@ -1,0 +1,135 @@
+<div class="analytics-dashboard" dir="rtl">
+  <div class="container-fluid">
+    
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+      <div class="col-xl-3 col-md-6 mb-4">
+        <mat-card class="pharmacy-card stat-card">
+          <mat-card-content class="text-center">
+            <mat-icon class="stat-icon text-primary">inventory</mat-icon>
+            <h3>{{ dashboardStats.totalProducts }}</h3>
+            <p class="arabic-text">إجمالي المنتجات</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      
+      <div class="col-xl-3 col-md-6 mb-4">
+        <mat-card class="pharmacy-card stat-card">
+          <mat-card-content class="text-center">
+            <mat-icon class="stat-icon text-success">shopping_cart</mat-icon>
+            <h3>{{ dashboardStats.totalOrders }}</h3>
+            <p class="arabic-text">إجمالي الطلبات</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      
+      <div class="col-xl-3 col-md-6 mb-4">
+        <mat-card class="pharmacy-card stat-card">
+          <mat-card-content class="text-center">
+            <mat-icon class="stat-icon text-info">attach_money</mat-icon>
+            <h3>{{ dashboardStats.totalRevenue | currency:'SAR':'symbol':'1.2-2':'ar' }}</h3>
+            <p class="arabic-text">إجمالي الإيرادات</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      
+      <div class="col-xl-3 col-md-6 mb-4">
+        <mat-card class="pharmacy-card stat-card">
+          <mat-card-content class="text-center">
+            <mat-icon class="stat-icon text-warning">warning</mat-icon>
+            <h3>{{ dashboardStats.lowStockAlerts }}</h3>
+            <p class="arabic-text">تنبيهات المخزون</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row mb-4">
+      <div class="col-lg-8 mb-4">
+        <mat-card class="pharmacy-card">
+          <mat-card-header>
+            <mat-card-title class="arabic-text">مخطط المبيعات</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <canvas id="salesChart"></canvas>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      
+      <div class="col-lg-4 mb-4">
+        <mat-card class="pharmacy-card">
+          <mat-card-header>
+            <mat-card-title class="arabic-text">أكثر المنتجات مبيعاً</mat-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="top-products-list">
+              <div class="product-item d-flex justify-content-between align-items-center mb-3" 
+                   *ngFor="let product of topProducts; let i = index">
+                <div class="product-info">
+                  <span class="rank">#{{ i + 1 }}</span>
+                  <span class="arabic-text product-name">{{ product.productName }}</span>
+                </div>
+                <div class="product-stats text-end">
+                  <div class="quantity">{{ product.totalQuantitySold }} قطعة</div>
+                  <div class="revenue text-muted">{{ product.totalRevenue | currency:'SAR':'symbol':'1.0-0':'ar' }}</div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Low Stock Alerts -->
+    <div class="row" *ngIf="lowStockAlerts.length > 0">
+      <div class="col-12">
+        <mat-card class="pharmacy-card">
+          <mat-card-header>
+            <mat-card-title class="arabic-text">تنبيهات المخزون المنخفض</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="table-responsive">
+              <table mat-table [dataSource]="lowStockAlerts" class="w-100">
+                <ng-container matColumnDef="productName">
+                  <th mat-header-cell *matHeaderCellDef class="arabic-text">اسم المنتج</th>
+                  <td mat-cell *matCellDef="let alert" class="arabic-text">{{ alert.productName }}</td>
+                </ng-container>
+                
+                <ng-container matColumnDef="currentStock">
+                  <th mat-header-cell *matHeaderCellDef class="arabic-text">المخزون الحالي</th>
+                  <td mat-cell *matCellDef="let alert">
+                    <span class="low-stock">{{ alert.currentStock }}</span>
+                  </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="minimumLevel">
+                  <th mat-header-cell *matHeaderCellDef class="arabic-text">الحد الأدنى</th>
+                  <td mat-cell *matCellDef="let alert">{{ alert.minimumLevel }}</td>
+                </ng-container>
+                
+                <ng-container matColumnDef="category">
+                  <th mat-header-cell *matHeaderCellDef class="arabic-text">الفئة</th>
+                  <td mat-cell *matCellDef="let alert" class="arabic-text">{{ alert.category }}</td>
+                </ng-container>
+                
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef class="arabic-text">الإجراءات</th>
+                  <td mat-cell *matCellDef="let alert">
+                    <button mat-button color="primary" class="pharmacy-button">
+                      <mat-icon>add</mat-icon>
+                      إضافة مخزون
+                    </button>
+                  </td>
+                </ng-container>
+                
+                <tr mat-header-row *matHeaderRowDef="['productName', 'currentStock', 'minimumLevel', 'category', 'actions']"></tr>
+                <tr mat-row *matRowDef="let row; columns: ['productName', 'currentStock', 'minimumLevel', 'category', 'actions'];"></tr>
+              </table>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
