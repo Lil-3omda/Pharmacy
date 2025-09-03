@@ -12,8 +12,11 @@ namespace Pharmacy.Infrastructure.Data
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Medicine> Medicines { get; set; }
+        public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Prescription> Prescriptions { get; set; }
+        public DbSet<PrescriptionItem> PrescriptionItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -24,6 +27,9 @@ namespace Pharmacy.Infrastructure.Data
                 .Property(m => m.Price)
                 .HasPrecision(18, 2);
 
+            builder.Entity<Product>()
+                .Property(p => p.Price)
+                .HasPrecision(18, 2);
             builder.Entity<Order>()
                 .Property(o => o.TotalPrice)
                 .HasPrecision(18, 2);
@@ -43,6 +49,11 @@ namespace Pharmacy.Infrastructure.Data
                 .HasForeignKey(m => m.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<Product>()
+                .HasOne(p => p.Category)
+                .WithMany()
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
             builder.Entity<Order>()
                 .HasOne(o => o.User)
                 .WithMany(u => u.Orders)
@@ -61,6 +72,23 @@ namespace Pharmacy.Infrastructure.Data
                 .HasForeignKey(oi => oi.MedicineId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<Prescription>()
+                .HasOne(p => p.User)
+                .WithMany()
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<PrescriptionItem>()
+                .HasOne(pi => pi.Prescription)
+                .WithMany(p => p.PrescriptionItems)
+                .HasForeignKey(pi => pi.PrescriptionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<PrescriptionItem>()
+                .HasOne(pi => pi.Medicine)
+                .WithMany()
+                .HasForeignKey(pi => pi.MedicineId)
+                .OnDelete(DeleteBehavior.Restrict);
             // Indexes
             builder.Entity<Medicine>()
                 .HasIndex(m => m.NameAr);
@@ -68,6 +96,12 @@ namespace Pharmacy.Infrastructure.Data
             builder.Entity<Medicine>()
                 .HasIndex(m => m.CategoryId);
 
+            builder.Entity<Product>()
+                .HasIndex(p => p.Name);
+
+            builder.Entity<Product>()
+                .HasIndex(p => p.Barcode)
+                .IsUnique();
             builder.Entity<Order>()
                 .HasIndex(o => o.UserId);
 

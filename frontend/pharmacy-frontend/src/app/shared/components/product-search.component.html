@@ -1,0 +1,40 @@
+<div class="product-search-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>البحث والتصفية</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <div class="search-form">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>البحث</mat-label>
+          <input matInput [formControl]="searchControl" placeholder="ابحث عن المنتجات...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>الفئة</mat-label>
+          <mat-select [formControl]="categoryControl">
+            <mat-option value="">جميع الفئات</mat-option>
+            <mat-option *ngFor="let category of categories" [value]="category.id">
+              {{category.nameAr}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>نطاق السعر</mat-label>
+          <mat-select [formControl]="priceRangeControl">
+            <mat-option *ngFor="let range of priceRanges" [value]="range.value">
+              {{range.label}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="clearFilters()" class="clear-btn">
+          مسح الفلاتر
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

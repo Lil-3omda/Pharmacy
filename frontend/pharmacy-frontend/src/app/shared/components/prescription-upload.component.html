@@ -1,0 +1,63 @@
+<div class="prescription-upload-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>رفع وصفة طبية</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <form [formGroup]="prescriptionForm" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>اسم الطبيب</mat-label>
+            <input matInput formControlName="doctorName">
+            <mat-error *ngIf="prescriptionForm.get('doctorName')?.hasError('required')">
+              اسم الطبيب مطلوب
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>اسم المريض</mat-label>
+            <input matInput formControlName="patientName">
+            <mat-error *ngIf="prescriptionForm.get('patientName')?.hasError('required')">
+              اسم المريض مطلوب
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>تاريخ الوصفة</mat-label>
+            <input matInput formControlName="prescriptionDate" type="date">
+            <mat-error *ngIf="prescriptionForm.get('prescriptionDate')?.hasError('required')">
+              تاريخ الوصفة مطلوب
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <div class="file-upload-area" (click)="fileInput.click()">
+            <input #fileInput type="file" accept="image/*" (change)="onFileSelected($event)" hidden>
+            <mat-icon>cloud_upload</mat-icon>
+            <p>انقر لرفع صورة الوصفة</p>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>ملاحظات</mat-label>
+            <textarea matInput formControlName="notes" rows="3"></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="prescriptionForm.invalid || uploading">
+            <mat-spinner *ngIf="uploading" diameter="20"></mat-spinner>
+            <span *ngIf="!uploading">رفع الوصفة</span>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

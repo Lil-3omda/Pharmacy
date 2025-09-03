@@ -1,0 +1,48 @@
+.prescription-upload-container {
+  direction: rtl;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form-row {
+  margin-bottom: 16px;
+  
+  .full-width {
+    width: 100%;
+  }
+}
+
+.file-upload-area {
+  border: 2px dashed #3498db;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: #2980b9;
+    background-color: #f8f9fa;
+  }
+  
+  mat-icon {
+    font-size: 48px;
+    color: #3498db;
+    margin-bottom: 16px;
+  }
+  
+  p {
+    color: #2c3e50;
+    margin: 0;
+  }
+}
+
+.form-actions {
+  text-align: center;
+  margin-top: 24px;
+  
+  button {
+    min-width: 150px;
+    height: 48px;
+  }
+}

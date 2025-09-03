@@ -1,0 +1,24 @@
+.product-search-container {
+  direction: rtl;
+  margin-bottom: 20px;
+}
+
+.search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  .clear-btn {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-form {
+    gap: 12px;
+  }
+}

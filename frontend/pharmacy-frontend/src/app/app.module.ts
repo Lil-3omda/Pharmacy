@@ -52,6 +52,8 @@ import { CategoryService } from './core/services/category.service';
 import { NotificationService } from './core/services/notification.service';
 import { PrescriptionService } from './core/services/prescription.service';
 import { OfferService } from './core/services/offer.service';
+import { AnalyticsService } from './core/services/analytics.service';
+import { ProductService } from './core/services/product.service';
 
 // Shared Components
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
@@ -61,6 +63,11 @@ import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loa
 import { SearchBarComponent } from './shared/components/search-bar/search-bar.component';
 import { MedicineCardComponent } from './shared/components/medicine-card/medicine-card.component';
 import { CategoryFilterComponent } from './shared/components/category-filter/category-filter.component';
+import { AnalyticsDashboardComponent } from './shared/components/analytics-dashboard/analytics-dashboard.component';
+import { BarcodeScannerComponent } from './shared/components/barcode-scanner/barcode-scanner.component';
+import { PrescriptionUploadComponent } from './shared/components/prescription-upload.component';
+import { ProductSearchComponent } from './shared/components/product-search.component';
+import { VisitorHomeComponent } from './shared/components/visitor-home/visitor-home.component';
 
 // Feature Components
 import { LoginComponent } from './features/auth/login/login.component';
@@ -90,6 +97,11 @@ import { ManageCategoriesComponent } from './features/admin/manage-categories/ma
     SearchBarComponent,
     CategoryFilterComponent,
     LoadingSpinnerComponent,
+    AnalyticsDashboardComponent,
+    BarcodeScannerComponent,
+    PrescriptionUploadComponent,
+    ProductSearchComponent,
+    VisitorHomeComponent,
     LoginComponent,
     RegisterComponent,
     HomeComponent,
@@ -148,12 +160,14 @@ import { ManageCategoriesComponent } from './features/admin/manage-categories/ma
   providers: [
     AuthService,
     MedicineService,
+    ProductService,
     OrderService,
     CartService,
     CategoryService,
     NotificationService,
     PrescriptionService,
     OfferService,
+    AnalyticsService,
     AuthGuard,
     RoleGuard,
     {

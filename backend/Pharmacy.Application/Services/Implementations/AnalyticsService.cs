@@ -1,9 +1,7 @@
-﻿using Pharmacy.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Pharmacy.Application.DTOs;
+using Pharmacy.Core.Entities;
+using Pharmacy.Infrastructure.Data;
 
 namespace Pharmacy.Application.Services.Implementations
 {
@@ -17,24 +15,24 @@ namespace Pharmacy.Application.Services.Implementations
 
     public class AnalyticsService : IAnalyticsService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly PharmacyDbContext _context;
 
-        public AnalyticsService(ApplicationDbContext context)
+        public AnalyticsService(PharmacyDbContext context)
         {
             _context = context;
         }
 
         public async Task<DashboardStatsDto> GetDashboardStatsAsync()
         {
-            var totalProducts = await _context.Products.CountAsync(p => p.IsActive);
+            var totalProducts = await _context.Medicines.CountAsync(m => m.IsActive);
             var totalOrders = await _context.Orders.CountAsync();
             var totalRevenue = await _context.Orders
-                .Where(o => o.Status == OrderStatus.Delivered)
-                .SumAsync(o => o.FinalAmount);
+                .Where(o => o.Status == OrderStatus.Completed)
+                .SumAsync(o => o.TotalPrice);
             var pendingOrders = await _context.Orders
                 .CountAsync(o => o.Status == OrderStatus.Pending);
-            var lowStockCount = await _context.Products
-                .CountAsync(p => p.StockQuantity <= p.MinimumStockLevel);
+            var lowStockCount = await _context.Medicines
+                .CountAsync(m => m.Stock <= 10);
 
             return new DashboardStatsDto
             {
@@ -49,12 +47,12 @@ namespace Pharmacy.Application.Services.Implementations
         public async Task<List<SalesChartDto>> GetSalesChartDataAsync(DateTime fromDate, DateTime toDate)
         {
             return await _context.Orders
-                .Where(o => o.OrderDate >= fromDate && o.OrderDate <= toDate && o.Status == OrderStatus.Delivered)
+                .Where(o => o.OrderDate >= fromDate && o.OrderDate <= toDate && o.Status == OrderStatus.Completed)
                 .GroupBy(o => o.OrderDate.Date)
                 .Select(g => new SalesChartDto
                 {
                     Date = g.Key,
-                    Sales = g.Sum(o => o.FinalAmount),
+                    Sales = g.Sum(o => o.TotalPrice),
                     OrderCount = g.Count()
                 })
                 .OrderBy(s => s.Date)
@@ -64,12 +62,12 @@ namespace Pharmacy.Application.Services.Implementations
         public async Task<List<TopProductDto>> GetTopSellingProductsAsync(int count = 10)
         {
             return await _context.OrderItems
-                .Include(oi => oi.Product)
-                .GroupBy(oi => oi.ProductId)
+                .Include(oi => oi.Medicine)
+                .GroupBy(oi => oi.MedicineId)
                 .Select(g => new TopProductDto
                 {
                     ProductId = g.Key,
-                    ProductName = g.First().Product.Name,
+                    ProductName = g.First().Medicine.NameAr,
                     TotalQuantitySold = g.Sum(oi => oi.Quantity),
                     TotalRevenue = g.Sum(oi => oi.TotalPrice)
                 })
@@ -80,15 +78,16 @@ namespace Pharmacy.Application.Services.Implementations
 
         public async Task<List<LowStockAlertDto>> GetLowStockAlertsAsync()
         {
-            return await _context.Products
-                .Where(p => p.StockQuantity <= p.MinimumStockLevel && p.IsActive)
-                .Select(p => new LowStockAlertDto
+            return await _context.Medicines
+                .Include(m => m.Category)
+                .Where(m => m.Stock <= 10 && m.IsActive)
+                .Select(m => new LowStockAlertDto
                 {
-                    ProductId = p.Id,
-                    ProductName = p.Name,
-                    CurrentStock = p.StockQuantity,
-                    MinimumLevel = p.MinimumStockLevel,
-                    Category = p.Category.Name
+                    ProductId = m.Id,
+                    ProductName = m.NameAr,
+                    CurrentStock = m.Stock,
+                    MinimumLevel = 10,
+                    Category = m.Category.NameAr
                 })
                 .ToListAsync();
         }

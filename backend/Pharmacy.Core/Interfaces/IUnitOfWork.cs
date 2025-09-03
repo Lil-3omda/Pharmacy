@@ -6,8 +6,11 @@ namespace Pharmacy.Core.Interfaces
     {
         IGenericRepository<Category> Categories { get; }
         IGenericRepository<Medicine> Medicines { get; }
+        IGenericRepository<Product> Products { get; }
         IGenericRepository<Order> Orders { get; }
         IGenericRepository<OrderItem> OrderItems { get; }
+        IGenericRepository<Prescription> Prescriptions { get; }
+        IGenericRepository<PrescriptionItem> PrescriptionItems { get; }
         IGenericRepository<ApplicationUser> Users { get; }
         
         Task<int> SaveChangesAsync();

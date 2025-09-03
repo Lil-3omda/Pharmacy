@@ -11,8 +11,11 @@ namespace Pharmacy.Infrastructure.Repositories
         private readonly PharmacyDbContext _context;
         private IGenericRepository<Category>? _categories;
         private IGenericRepository<Medicine>? _medicines;
+        private IGenericRepository<Product>? _products;
         private IGenericRepository<Order>? _orders;
         private IGenericRepository<OrderItem>? _orderItems;
+        private IGenericRepository<Prescription>? _prescriptions;
+        private IGenericRepository<PrescriptionItem>? _prescriptionItems;
         private IGenericRepository<ApplicationUser>? _users;
         private IDbContextTransaction? _transaction;
 
@@ -27,12 +30,19 @@ namespace Pharmacy.Infrastructure.Repositories
         public IGenericRepository<Medicine> Medicines => 
             _medicines ??= new GenericRepository<Medicine>(_context);
 
+        public IGenericRepository<Product> Products => 
+            _products ??= new GenericRepository<Product>(_context);
         public IGenericRepository<Order> Orders => 
             _orders ??= new GenericRepository<Order>(_context);
 
         public IGenericRepository<OrderItem> OrderItems => 
             _orderItems ??= new GenericRepository<OrderItem>(_context);
 
+        public IGenericRepository<Prescription> Prescriptions => 
+            _prescriptions ??= new GenericRepository<Prescription>(_context);
+
+        public IGenericRepository<PrescriptionItem> PrescriptionItems => 
+            _prescriptionItems ??= new GenericRepository<PrescriptionItem>(_context);
         public IGenericRepository<ApplicationUser> Users => 
             _users ??= new GenericRepository<ApplicationUser>(_context);
 
