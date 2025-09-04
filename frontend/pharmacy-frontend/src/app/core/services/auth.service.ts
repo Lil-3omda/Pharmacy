@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { map, delay, tap } from 'rxjs/operators';
+import { map, delay, tap, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 export interface User {
@@ -60,7 +60,12 @@ export class AuthService {
         tap(response => {
           this.setToken(response.token);
           this.setUser(response.user);
+          this.currentUserSubject.next(response.user);
           this.isAuthenticatedSubject.next(true);
+        }),
+        catchError(error => {
+          console.error('Login error:', error);
+          return throwError(() => error);
         })
       );
   }
@@ -75,7 +80,12 @@ export class AuthService {
         tap(response => {
           this.setToken(response.token);
           this.setUser(response.user);
+          this.currentUserSubject.next(response.user);
           this.isAuthenticatedSubject.next(true);
+        }),
+        catchError(error => {
+          console.error('Register error:', error);
+          return throwError(() => error);
         })
       );
   }

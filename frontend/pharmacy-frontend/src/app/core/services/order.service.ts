@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 export enum OrderStatus {
@@ -14,15 +14,8 @@ export enum OrderStatus {
 
 export interface OrderItem {
   id: number;
-  orderId: number;
   medicineId: number;
-  medicine: {
-    id: number;
-    nameAr: string;
-    nameEn: string;
-    price: number;
-    imageUrl: string;
-  };
+  medicineNameAr: string;
   quantity: number;
   unitPrice: number;
   totalPrice: number;
@@ -31,11 +24,7 @@ export interface OrderItem {
 export interface Order {
   id: number;
   userId: string;
-  user: {
-    id: string;
-    fullName: string;
-    email: string;
-  };
+  userName: string;
   totalPrice: number;
   status: OrderStatus;
   notes?: string;
@@ -61,7 +50,7 @@ export interface UpdateOrderStatusRequest {
   providedIn: 'root'
 })
 export class OrderService {
-  private apiUrl = `${environment.apiUrl}/orders`;
+  private apiUrl = `${environment.apiUrl}/order`;
 
   constructor(private http: HttpClient) {}
 
@@ -69,7 +58,14 @@ export class OrderService {
     if ((environment as any).useMockAuth) {
       return this.getMockOrders();
     }
-    return this.http.get<Order[]>(this.apiUrl);
+    
+    return this.http.get<Order[]>(this.apiUrl)
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching orders:', error);
+          return this.getMockOrders();
+        })
+      );
   }
 
   getOrder(id: number): Observable<Order> {
@@ -77,11 +73,17 @@ export class OrderService {
   }
 
   getUserOrders(): Observable<Order[]> {
-    return this.http.get<Order[]>(`${this.apiUrl}/my-orders`);
+    return this.http.get<Order[]>(`${this.apiUrl}/my-orders`)
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching user orders:', error);
+          return this.getMockOrders();
+        })
+      );
   }
 
   getOrdersByStatus(status: OrderStatus): Observable<Order[]> {
-    return this.http.get<Order[]>(`${this.apiUrl}/by-status/${status}`);
+    return this.http.get<Order[]>(`${this.apiUrl}/status/${status}`);
   }
 
   createOrder(order: CreateOrderRequest): Observable<Order> {
@@ -89,27 +91,15 @@ export class OrderService {
   }
 
   updateOrderStatus(id: number, statusUpdate: UpdateOrderStatusRequest): Observable<Order> {
-    return this.http.patch<Order>(`${this.apiUrl}/${id}/status`, statusUpdate);
+    return this.http.put<Order>(`${this.apiUrl}/${id}/status`, statusUpdate);
   }
 
   deleteOrder(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  approveOrder(id: number, notes?: string): Observable<Order> {
-    return this.updateOrderStatus(id, { status: OrderStatus.Approved, notes });
-  }
-
-  rejectOrder(id: number, notes?: string): Observable<Order> {
-    return this.updateOrderStatus(id, { status: OrderStatus.Rejected, notes });
-  }
-
-  completeOrder(id: number, notes?: string): Observable<Order> {
-    return this.updateOrderStatus(id, { status: OrderStatus.Completed, notes });
-  }
-
-  cancelOrder(id: number, notes?: string): Observable<Order> {
-    return this.updateOrderStatus(id, { status: OrderStatus.Cancelled, notes });
+  calculateTotal(items: { medicineId: number; quantity: number }[]): Observable<number> {
+    return this.http.post<number>(`${this.apiUrl}/calculate-total`, items);
   }
 
   private getMockOrders(): Observable<Order[]> {
@@ -117,11 +107,7 @@ export class OrderService {
       {
         id: 1,
         userId: 'user1',
-        user: {
-          id: 'user1',
-          fullName: 'أحمد محمد',
-          email: 'ahmed@example.com'
-        },
+        userName: 'أحمد محمد',
         totalPrice: 125.50,
         status: OrderStatus.Pending,
         notes: 'توصيل سريع من فضلك',
@@ -129,15 +115,8 @@ export class OrderService {
         orderItems: [
           {
             id: 1,
-            orderId: 1,
             medicineId: 1,
-            medicine: {
-              id: 1,
-              nameAr: 'باراسيتامول',
-              nameEn: 'Paracetamol',
-              price: 15.50,
-              imageUrl: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg'
-            },
+            medicineNameAr: 'باراسيتامول',
             quantity: 2,
             unitPrice: 15.50,
             totalPrice: 31.00

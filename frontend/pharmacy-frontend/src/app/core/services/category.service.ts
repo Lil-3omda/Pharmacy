@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 export interface Category {
@@ -18,7 +18,7 @@ export interface Category {
   providedIn: 'root'
 })
 export class CategoryService {
-  private apiUrl = `${environment.apiUrl}/categories`;
+  private apiUrl = `${environment.apiUrl}/category`;
 
   constructor(private http: HttpClient) {}
 
@@ -26,7 +26,14 @@ export class CategoryService {
     if ((environment as any).useMockAuth) {
       return this.getMockCategories();
     }
-    return this.http.get<Category[]>(this.apiUrl);
+    
+    return this.http.get<Category[]>(this.apiUrl)
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching categories:', error);
+          return this.getMockCategories();
+        })
+      );
   }
 
   getCategory(id: number): Observable<Category> {

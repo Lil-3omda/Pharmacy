@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 export interface Medicine {
@@ -17,6 +17,9 @@ export interface Medicine {
   expiryDate: string;
   imageUrl: string;
   isActive: boolean;
+  manufacturer?: string;
+  dosage?: string;
+  prescriptionRequired?: boolean;
 }
 
 export interface MedicineFilter {
@@ -26,14 +29,14 @@ export interface MedicineFilter {
   maxPrice?: number;
   inStock?: boolean;
   expiringSoon?: boolean;
-   prescriptionRequired?: boolean;
+  prescriptionRequired?: boolean;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class MedicineService {
-  private apiUrl = `${environment.apiUrl}/medicines`;
+  private apiUrl = `${environment.apiUrl}/medicine`;
 
   constructor(private http: HttpClient) {}
 
@@ -52,14 +55,27 @@ export class MedicineService {
       });
     }
 
-    return this.http.get<Medicine[]>(this.apiUrl, { params });
+    return this.http.get<Medicine[]>(this.apiUrl, { params })
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching medicines:', error);
+          return this.getMockMedicines(filter);
+        })
+      );
   }
 
   getMedicine(id: number): Observable<Medicine> {
     if ((environment as any).useMockAuth) {
       return this.getMockMedicine(id);
     }
-    return this.http.get<Medicine>(`${this.apiUrl}/${id}`);
+    
+    return this.http.get<Medicine>(`${this.apiUrl}/${id}`)
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching medicine:', error);
+          return this.getMockMedicine(id);
+        })
+      );
   }
 
   createMedicine(medicine: any): Observable<Medicine> {
@@ -88,7 +104,9 @@ export class MedicineService {
         stock: 100,
         expiryDate: '2025-12-31',
         imageUrl: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg',
-        isActive: true
+        isActive: true,
+        manufacturer: 'شركة الدواء',
+        dosage: '500mg'
       },
       {
         id: 2,
@@ -102,7 +120,10 @@ export class MedicineService {
         stock: 75,
         expiryDate: '2025-10-15',
         imageUrl: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg',
-        isActive: true
+        isActive: true,
+        manufacturer: 'شركة المضادات',
+        dosage: '250mg',
+        prescriptionRequired: true
       },
       {
         id: 3,
@@ -116,7 +137,9 @@ export class MedicineService {
         stock: 50,
         expiryDate: '2026-03-20',
         imageUrl: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg',
-        isActive: true
+        isActive: true,
+        manufacturer: 'شركة الفيتامينات',
+        dosage: '1000mg'
       },
       {
         id: 4,
@@ -130,7 +153,8 @@ export class MedicineService {
         stock: 30,
         expiryDate: '2025-08-10',
         imageUrl: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg',
-        isActive: true
+        isActive: true,
+        manufacturer: 'شركة التجميل'
       }
     ];
 
@@ -174,7 +198,9 @@ export class MedicineService {
       stock: 100,
       expiryDate: '2025-12-31',
       imageUrl: 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg',
-      isActive: true
+      isActive: true,
+      manufacturer: 'شركة الدواء',
+      dosage: '500mg'
     };
 
     return of(mockMedicine).pipe(delay(300));

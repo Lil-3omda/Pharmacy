@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -13,11 +13,13 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   isLoading = false;
   hidePassword = true;
+  returnUrl = '/home';
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
+    private route: ActivatedRoute,
     private snackBar: MatSnackBar
   ) {
     this.loginForm = this.formBuilder.group({
@@ -27,6 +29,9 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Get return url from route parameters or default to '/'
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
+    
     if (this.authService.isTokenValid()) {
       this.redirectBasedOnRole();
     }
@@ -43,26 +48,32 @@ export class LoginComponent implements OnInit {
           this.snackBar.open('تم تسجيل الدخول بنجاح', 'إغلاق', {
             duration: 3000,
             horizontalPosition: 'center',
-            verticalPosition: 'top'
+            verticalPosition: 'top',
+            panelClass: ['success-snackbar']
           });
-          this.redirectBasedOnRole();
+          
+          // Small delay to show success message before redirect
+          setTimeout(() => {
+            this.redirectBasedOnRole();
+          }, 500);
         },
         error: (error) => {
           this.isLoading = false;
           let errorMessage = 'حدث خطأ أثناء تسجيل الدخول';
 
           if (error.status === 0) {
-            errorMessage = 'تعذر الاتصال بالخادم. يرجى التأكد من تشغيل الخادم (API) والتحقق من الاتصال الآمن (SSL).';
+            errorMessage = 'تعذر الاتصال بالخادم. يرجى التأكد من تشغيل الخادم والمحاولة مرة أخرى.';
+          } else if (error.status === 400 || error.status === 401) {
+            errorMessage = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
           } else if (error.error && error.error.message) {
             errorMessage = error.error.message;
-          } else if (typeof error.error === 'string' && error.error.trim().length > 0) {
-            errorMessage = error.error;
           }
 
           this.snackBar.open(errorMessage, 'إغلاق', {
             duration: 5000,
             horizontalPosition: 'center',
-            verticalPosition: 'top'
+            verticalPosition: 'top',
+            panelClass: ['error-snackbar']
           });
         }
       });
@@ -93,7 +104,7 @@ export class LoginComponent implements OnInit {
           break;
         case 'Customer':
         default:
-          this.router.navigate(['/home']);
+          this.router.navigate([this.returnUrl]);
           break;
       }
     }

@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: '/api',
-  // Enable mock auth to allow login without backend
-  useMockAuth: true
+  apiUrl: 'https://localhost:7110/api',
+  // Disable mock auth to use real backend
+  useMockAuth: false
 };

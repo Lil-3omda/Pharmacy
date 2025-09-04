@@ -1,63 +1,99 @@
 .product-list-container {
   direction: rtl;
   min-height: calc(100vh - 200px);
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 32px;
 }
 
 .page-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 48px;
   
   h1 {
-    font-size: 36px;
-    font-weight: 600;
-    color: #2c3e50;
-    margin: 0 0 8px 0;
+    font-size: 48px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0 0 16px 0;
+    letter-spacing: -1px;
   }
   
   p {
-    font-size: 18px;
-    color: #7f8c8d;
+    font-size: 20px;
+    color: var(--text-secondary);
     margin: 0;
+    font-weight: 500;
   }
 }
 
 .content-wrapper {
   display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 30px;
+  grid-template-columns: 320px 1fr;
+  gap: 40px;
 }
 
 .filters-sidebar {
   .filters-card {
     position: sticky;
-    top: 100px;
+    top: 120px;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 2px solid var(--border-color);
     
     mat-card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 24px;
+      border-bottom: 2px solid var(--border-color);
+      
+      mat-card-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
       
       .clear-filters {
-        font-size: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 12px;
       }
+    }
+    
+    mat-card-content {
+      padding: 24px;
     }
   }
 }
 
 .filter-section {
-  margin-bottom: 24px;
+  margin-bottom: 32px;
   
   h4 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #2c3e50;
-    margin: 0 0 12px 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 16px 0;
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      right: 0;
+      width: 40px;
+      height: 3px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+      border-radius: 2px;
+    }
   }
   
   .full-width {
@@ -66,16 +102,27 @@
   
   .price-inputs {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     
     mat-form-field {
       flex: 1;
+      
+      .mat-mdc-form-field-wrapper {
+        border-radius: 16px;
+      }
     }
   }
   
   .filter-checkbox {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+    font-weight: 500;
+    
+    .mat-mdc-checkbox {
+      .mdc-checkbox {
+        border-radius: 8px;
+      }
+    }
   }
 }
 
@@ -84,35 +131,53 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
-    padding: 16px;
+    margin-bottom: 32px;
+    padding: 24px;
     background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 2px solid var(--border-color);
     
     .results-info {
-      font-weight: 500;
-      color: #2c3e50;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-size: 18px;
     }
     
     .toolbar-actions {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 20px;
       
       .view-mode-toggle {
         display: flex;
-        border: 1px solid #ddd;
-        border-radius: 4px;
+        background: rgba(248, 250, 252, 0.8);
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
         overflow: hidden;
         
         button {
           border-radius: 0;
+          padding: 12px;
+          transition: all 0.3s ease;
+          
+          &[color="primary"] {
+            background: var(--primary-color);
+            color: white;
+          }
+          
+          &:hover {
+            background: rgba(37, 99, 235, 0.1);
+          }
         }
       }
       
       .sort-field {
-        width: 150px;
+        width: 180px;
+        
+        .mat-mdc-form-field-wrapper {
+          border-radius: 16px;
+        }
       }
     }
   }
@@ -121,50 +186,101 @@
 .products-grid {
   &.grid-view {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 32px;
   }
   
   &.list-view {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
+    
+    ::ng-deep app-medicine-card {
+      .medicine-card {
+        display: flex;
+        flex-direction: row;
+        height: auto;
+        
+        .card-header {
+          flex: 0 0 200px;
+          
+          .medicine-image-container {
+            height: 150px;
+          }
+        }
+        
+        .medicine-content {
+          flex: 1;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: 24px;
+          
+          .medicine-header {
+            flex: 1;
+          }
+          
+          .price-section {
+            flex: 0 0 auto;
+          }
+        }
+        
+        .medicine-actions {
+          flex: 0 0 auto;
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
   }
 }
 
 .no-results {
   text-align: center;
-  padding: 60px 20px;
+  padding: 80px 32px;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
   
   .no-results-icon {
-    font-size: 64px;
-    color: #bdc3c7;
-    margin-bottom: 16px;
+    font-size: 80px;
+    color: #cbd5e1;
+    margin-bottom: 24px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
   }
   
   h3 {
-    font-size: 24px;
-    color: #2c3e50;
-    margin: 0 0 8px 0;
+    font-size: 28px;
+    color: var(--text-primary);
+    margin: 0 0 12px 0;
+    font-weight: 700;
   }
   
   p {
-    color: #7f8c8d;
-    margin: 0 0 24px 0;
+    color: var(--text-secondary);
+    margin: 0 0 32px 0;
+    font-size: 18px;
+  }
+  
+  button {
+    border-radius: 16px;
+    padding: 16px 32px;
+    font-weight: 700;
+    font-size: 16px;
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .content-wrapper {
-    grid-template-columns: 250px 1fr;
-    gap: 20px;
+    grid-template-columns: 280px 1fr;
+    gap: 32px;
   }
 }
 
 @media (max-width: 768px) {
   .content-wrapper {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 24px;
   }
   
   .filters-sidebar {
@@ -181,22 +297,42 @@
   
   .products-toolbar {
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
     
     .toolbar-actions {
       width: 100%;
       justify-content: space-between;
     }
   }
+  
+  .products-grid {
+    &.grid-view {
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    
+    &.list-view ::ng-deep app-medicine-card .medicine-card {
+      flex-direction: column;
+      
+      .card-header {
+        flex: none;
+      }
+      
+      .medicine-content {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  }
+  
+  .container {
+    padding: 20px;
+  }
 }
 
 @media (max-width: 480px) {
-  .container {
-    padding: 16px;
-  }
-  
   .page-header h1 {
-    font-size: 28px;
+    font-size: 36px;
   }
   
   .products-grid.grid-view {
