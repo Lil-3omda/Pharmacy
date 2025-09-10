@@ -212,6 +212,38 @@ export class AuthService {
     return of(response).pipe(delay(500));
   }
 
+  getProfile(): Observable<User> {
+    if ((environment as any).useMockAuth) {
+      const user = this.getCurrentUser();
+      return user ? of(user).pipe(delay(300)) : throwError(() => ({ status: 401, error: { message: 'Not authenticated' } }));
+    }
+
+    return this.http.get<User>(`${environment.apiUrl}/auth/profile`).pipe(
+      tap(user => {
+        // keep local storage and streams in sync
+        this.setUser(user);
+      }),
+      catchError(error => {
+        console.error('Profile fetch error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  changePassword(req: { currentPassword: string; newPassword: string }): Observable<any> {
+    if ((environment as any).useMockAuth) {
+      // simulate password change success
+      return of({}).pipe(delay(500));
+    }
+
+    return this.http.post<any>(`${environment.apiUrl}/auth/change-password`, req).pipe(
+      catchError(error => {
+        console.error('Change password error:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
   private createFakeToken(user: User): string {
     const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
     const payload = btoa(JSON.stringify({
